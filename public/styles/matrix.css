@@ -1,0 +1,74 @@
+.matrix-container {
+  display: inline-grid;
+  grid-template-columns: min-content;
+  grid-template-rows: min-content;
+  grid-template-areas:
+    ". player2"
+    "player1 matrixTable";
+  gap: 10px;
+}
+
+.player1 {
+  grid-area: player1;
+  border-style: dashed;
+  display: flex;
+  justify-content:right;
+  align-items: center;
+}
+
+.player2 {
+  grid-area: player2;
+  border-style: dashed;
+}
+
+.table-header {
+  grid-area: table-header;
+}
+
+.matrixTable {
+  grid-area: matrixTable;
+}
+
+
+
+table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+thead tr {
+background-color: #009879;
+color: #ffffff;
+}
+
+th,td {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+
+.add-row-btn,
+.add-col-btn {
+  background-color: lightblue;
+  border: none;
+  padding: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.remove-row-btn,
+.remove-col-btn {
+  background-color: lightcoral;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
