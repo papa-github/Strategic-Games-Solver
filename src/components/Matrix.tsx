@@ -93,8 +93,6 @@ class Matrix {
     }
 
     validateMatrixData(){
-        console.log("Matrix check")
-        console.log(this)
         //Check cells are correctly formatted
         for (let i = 0; i < this.matrixData.length; i++) {
             for (let j = 0; j < this.matrixData[0].length; j++) {
@@ -150,7 +148,7 @@ class Matrix {
 
     removeRow(rowHeader: string){
       let index = this.rowHeaders.indexOf(rowHeader)
-      if (index === -1 || index === undefined){
+      if (index === -1 ){
         throw new Error(`Remove Row - Index could not be found\nRequested header: ${rowHeader}\nCurrent headers: ${this.rowHeaders}`);
       }
       this.matrixData.splice(index, 1);
@@ -173,7 +171,25 @@ class Matrix {
       return count;
     }
 
-    display() {
+    convertToNumberMatrix(): number[][][] {
+      const numRows = this.matrixData.length;
+      const numCols = this.matrixData[0].length;
+      const numberMatrix: number[][][] = [];
+    
+      for (let i = 0; i < numRows; i++) {
+        numberMatrix.push([]);
+        for (let j = 0; j < numCols; j++) {
+          const cellData = this.matrixData[i][j];
+          const cellValues = cellData.split(",").map((val) => parseFloat(val));
+          numberMatrix[i][j] = cellValues
+        }
+      }
+    
+      return numberMatrix;
+    }
+    
+
+    display(highlightCells: number[][] = []): JSX.Element {
       return (
         <div>
           <div className="matrix-container">
@@ -198,11 +214,14 @@ class Matrix {
                       <th>
                         {this.rowHeaders[rowIndex]}
                       </th>
-                      {row.map((cellData, colIndex) => (
-                        <td key={colIndex}>
-                          {cellData}
-                        </td>
-                      ))}
+                      {row.map((cellData, colIndex) => {
+                        const isHighlighted = highlightCells.some((cell) => cell[0] === rowIndex && cell[1] === colIndex);
+                        return (
+                          <td key={colIndex} className={isHighlighted ? "highlighted" : ""}>
+                            {cellData}
+                          </td>
+                        );
+                      })}
                       <td></td>
                     </tr>
                   ))}
@@ -220,10 +239,6 @@ class Matrix {
         </div>
       );
     }
-
-      
-      
-
 }
 
 export default Matrix

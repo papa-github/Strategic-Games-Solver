@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Matrix from './Matrix';
 
-function Dominance(props: { matrix: Matrix}) {
+function Dominance(props: { matrix: Matrix, setReducedMatrix: React.Dispatch<React.SetStateAction<Matrix | undefined>>}) {
     const thisMatrix:Matrix = props.matrix
 
     const steps: [string, JSX.Element][] = [["Starting Matrix", thisMatrix.display()]]; //Each step contains a message (" A dominated by B", and a Matrix (The prev matrix with row/col A removed))
@@ -66,10 +66,14 @@ function Dominance(props: { matrix: Matrix}) {
             steps.push([message, currentMatrix.clone().display()])
         })  
     }
+    useEffect(()=>{
+        props.setReducedMatrix(currentMatrix)
+    })
+    
 
     return (
         <div>
-            <p> First, we eliminate strictly dominated strategies to reduce the payoff matrix:</p>
+            <h2> First, we eliminate strictly dominated strategies to reduce the payoff matrix:</h2>
             {
                 steps.map((step, index) =>(
                     <div key = {index}>

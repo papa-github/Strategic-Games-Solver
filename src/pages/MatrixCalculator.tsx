@@ -4,6 +4,7 @@ import EditableMatrix from '../components/EditableMatrix';
 import '../styles/matrix.css'
 import Dominance from '../components/Dominance';
 import Matrix from '../components/Matrix';
+import MatrixCalculations from '../components/MatrixCalculations';
 
 
 function MatrixCalculator() {
@@ -27,8 +28,8 @@ function MatrixCalculator() {
             handleCalculate={HandleCalculate}
         />
         
-        {matrixData && <Dominance
-          matrix={matrixData.clone()}
+        {matrixData && <MatrixCalculations
+          param={matrixData.clone()}
 
          />}
     </div>
