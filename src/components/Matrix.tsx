@@ -148,16 +148,21 @@ class Matrix {
         return transposed.map(row => row.map(val => Number(val)));
     }
 
-    removeRow(rowIndex: number){
-        this.matrixData.splice(rowIndex, 1);
-        this.rowHeaders.splice(rowIndex, 1);
-        this.validateMatrixData()
+    removeRow(rowHeader: string){
+      let index = this.rowHeaders.indexOf(rowHeader)
+      if (index === -1 || index === undefined){
+        throw new Error(`Remove Row - Index could not be found\nRequested header: ${rowHeader}\nCurrent headers: ${this.rowHeaders}`);
+      }
+      this.matrixData.splice(index, 1);
+      this.rowHeaders.splice(index, 1);
+      this.validateMatrixData()
     }
-    removeCol(colIndex: number){
-        for (let i = 0; i < this.matrixData.length; i++) {
-            this.matrixData[i].splice(colIndex, 1);
-        }
-        this.colHeaders = this.colHeaders.filter((_, i) => i !== colIndex);
+    removeCol(colHeader: string){
+      let index = this.colHeaders.indexOf(colHeader)
+      for (let i = 0; i < this.matrixData.length; i++) {
+          this.matrixData[i].splice(index, 1);
+      }
+      this.colHeaders = this.colHeaders.filter((_, i) => i !== index);
     }
 
     size(): number {

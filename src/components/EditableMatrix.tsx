@@ -69,7 +69,6 @@ const EditableMatrix = (props: {handleCalculate: Function}) => {
   };
 
   const handleRemoveColumn = (colIndex: number) => {
-    console.log("For some reason, this is being called")
     const newHeaders = [...colHeaders];
     if (newHeaders.length > 1){
       const newData = [...matrixData];
@@ -90,10 +89,8 @@ const EditableMatrix = (props: {handleCalculate: Function}) => {
   function handleCalculate(): void {
     try {
       let inputMatrix = new Matrix(matrixData,rowHeaders,colHeaders,player1Name,player2Name)
-      console.log("Sending matrix out of editable: "); console.log(inputMatrix)
       props.handleCalculate(inputMatrix)
     } catch (error) {
-      console.log(matrixData)
       alert(error)
     }
     
