@@ -1,41 +1,51 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Matrix from './Matrix';
 
 
 
 
 // eslint-disable-next-line react/prop-types, no-empty-pattern
-const Matrix = ({onCalculate}) => {
-  
-  const [matrixData, setMatrixData] = useState([["1,2", "3,4"],["5,6", "7,8"]]);
-  const [rowHeaders, setRowHeaders] = useState(["A", "B"]);
-  const [colHeaders, setColHeaders] = useState(["C", "D"]);
-  const [player1Name, setPlayer1Name] = useState("Player 1");
-  const [player2Name, setPlayer2Name] = useState("Player 2");
+const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function}) => {
 
-  const handleCellChange = (event, rowIndex, colIndex) => {
+  
+
+  const [matrixData, setMatrixData] = useState<string[][]>([["1,2", "3,4"],["5,6", "7,8"],])
+  const [rowHeaders, setRowHeaders] = useState<string[]>(["A", "B"])
+  const [colHeaders, setColHeaders] = useState<string[]>(["C", "D"])
+  const [player1Name, setPlayer1Name] = useState<string>("Player 1")
+  const [player2Name, setPlayer2Name] = useState<string>("Player 2")
+
+  
+
+  const handleCellChange = (event: React.ChangeEvent<HTMLInputElement>, rowIndex: number, colIndex: number) => {
     const newData = [...matrixData];
     newData[rowIndex][colIndex] = event.target.value;
     setMatrixData(newData);
+    props.deactivate()
   };
 
-  const handleRowHeaderChange = (event, rowIndex) => {
+  const handleRowHeaderChange = (event: React.ChangeEvent<HTMLInputElement>, rowIndex: number) => {
     const newHeaders = [...rowHeaders];
     newHeaders[rowIndex] = event.target.value;
     setRowHeaders(newHeaders);
+    props.deactivate()
   };
 
-  const handleColHeaderChange = (event, colIndex) => {
+  const handleColHeaderChange = (event: React.ChangeEvent<HTMLInputElement>, colIndex: number) => {
     const newHeaders = [...colHeaders];
     newHeaders[colIndex] = event.target.value;
     setColHeaders(newHeaders);
+    props.deactivate()
   };
 
   const handleAddRow = () => {
     setMatrixData([...matrixData, Array.from({ length: matrixData[0].length }, () => '')]);
     setRowHeaders([...rowHeaders, `Row ${matrixData.length + 1}`]);
+    props.deactivate()
   };
 
-  const handleRemoveRow = (rowIndex) => {
+  const handleRemoveRow = (rowIndex: number) => {
     const newHeaders = [...rowHeaders];
     if (newHeaders.length > 1){
       const newData = [...matrixData];
@@ -46,6 +56,7 @@ const Matrix = ({onCalculate}) => {
     } else{
       alert("You must have a least one row")
     }
+    props.deactivate()
     
   };
 
@@ -54,9 +65,11 @@ const Matrix = ({onCalculate}) => {
       prevData.map((row) => [...row, ''])
     );
     setColHeaders([...colHeaders, `Col ${matrixData[0].length + 1}`]);
+    props.deactivate()
   };
 
-  const handleRemoveColumn = (colIndex) => {
+  const handleRemoveColumn = (colIndex: number) => {
+    console.log("For some reason, this is being called")
     const newHeaders = [...colHeaders];
     if (newHeaders.length > 1){
       const newData = [...matrixData];
@@ -67,38 +80,24 @@ const Matrix = ({onCalculate}) => {
     }else{
       alert("You must have at least one column")
     }
+    props.deactivate()
     
   };
 
-  const handleCalculate = () => {
-    //Error checking
-    const isValid = validateMatrixData(matrixData);
-  
-    if (!isValid) {
-      alert('Input format is incorrect. Please enter numbers separated by commas.');
-      return;
-    }
-    // Create an array of arrays that represents the matrix data
-    const matrixArray = matrixData.map((row) => [...row]);
-    // Send the matrix array up to the parent component (App) via a prop function
-    // Here, we're calling a function called "onCalculate" that was passed as a prop to this component
-    // We're passing the matrixArray as an argument to this function
-    onCalculate(matrixArray);
-  };
 
-  const validateMatrixData = (matrixData) => {
-    for (let i = 0; i < matrixData.length; i++) {
-      for (let j = 0; j < matrixData[0].length; j++) {
-        const cellValue = matrixData[i][j].trim();
-        if (!/^\d+\s*,\s*\d+$/.test(cellValue)) {
-          return false;
-        }
-        matrixData[i][j] = cellValue.replace(/\s/g, '');
-      }
-    }
-    return true;
-  };
 
+
+  function handleCalculate(): void {
+    try {
+      let inputMatrix = new Matrix(matrixData,rowHeaders,colHeaders,player1Name,player2Name)
+      console.log("Sending matrix out of editable: "); console.log(inputMatrix)
+      props.handleCalculate(inputMatrix)
+    } catch (error) {
+      console.log(matrixData)
+      alert(error)
+    }
+    
+  }
 
   return (
     <div>
@@ -163,12 +162,26 @@ const Matrix = ({onCalculate}) => {
             </tbody>
           </table>
         </div>
-        <button onClick={handleCalculate}>Calculate</button>
+        <div className='calculate-button-container'><button className="calculate-button" onClick={handleCalculate}>Calculate</button></div>
       </div>
     </div>
   );
   
 }
 
+EditableMatrix.propTypes = {
+  matrixData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  setMatrixData: PropTypes.func,
+  rowHeaders: PropTypes.arrayOf(PropTypes.string),
+  setRowHeaders: PropTypes.func,
+  colHeaders: PropTypes.arrayOf(PropTypes.string),
+  setColHeaders: PropTypes.func,
+  player1Name: PropTypes.string,
+  setPlayer1Name: PropTypes.func,
+  player2Name: PropTypes.string,
+  setPlayer2Name: PropTypes.func,
+  handleCalculate: PropTypes.func
+}
 
-export default Matrix;
+
+export default EditableMatrix;

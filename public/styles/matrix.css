@@ -4,13 +4,13 @@
   grid-template-rows: min-content;
   grid-template-areas:
     ". player2"
-    "player1 matrixTable";
-  gap: 10px;
+    "player1 matrixTable"
+    ". calculate-button-container";
+  gap: 5px;
 }
 
 .player1 {
   grid-area: player1;
-  border-style: dashed;
   display: flex;
   justify-content:right;
   align-items: center;
@@ -18,7 +18,6 @@
 
 .player2 {
   grid-area: player2;
-  border-style: dashed;
 }
 
 .table-header {
@@ -29,6 +28,15 @@
   grid-area: matrixTable;
 }
 
+.calculate-button-container{
+  grid-area: calculate-button-container;
+  display:flex;
+  justify-content: right;
+}
+
+.calculate-button{
+  
+}
 
 
 table {
@@ -71,4 +79,35 @@ tbody tr {
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+
+.calculate-button {
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  cursor: pointer;
+  font-family: arial,sans-serif;
+  font-size: 14px;
+  height: 36px;
+  line-height: 27px;
+  min-width: 54px;
+  padding: 0 16px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: pre;
+}
+
+.calculate-button:hover {
+  border-color: #dadce0;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+.calculate-button:focus {
+  border-color: #4285f4;
+  outline: none;
 }
