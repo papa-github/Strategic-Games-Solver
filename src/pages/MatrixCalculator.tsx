@@ -9,23 +9,17 @@ import Matrix from '../components/Matrix';
 function MatrixCalculator() {
 
   const [inputMatrix, setInputMatrixData] = useState<Matrix>(new Matrix());
-  const [matrixData, setMatrixData] = useState<Matrix>(new Matrix())
+  const [matrixData, setMatrixData] = useState<Matrix>()
   const [renderDominance, setRenderDominance] = useState<boolean>(false)
 
-  useEffect(() => {
-    setMatrixData(inputMatrix);
-    console.log("Matrix Data Updated")
-    setRenderDominance(true);
-  }, [inputMatrix]);
+  // useEffect(() => {
+  //   setMatrixData(inputMatrix);
+  //   console.log("Matrix Data Updated")
+  //   setRenderDominance(true);
+  // }, [inputMatrix]);
 
   function HandleCalculate(matrix: Matrix) {
-
-    setInputMatrixData(matrix);
-  }
-
-  function deactivateCalculation(){
-    console.log("dc")
-    setRenderDominance(false)
+    setMatrixData(matrix)
   }
 
   return (
@@ -33,10 +27,9 @@ function MatrixCalculator() {
       <h1>Matrix Calculator</h1>
         <EditableMatrix
             handleCalculate={HandleCalculate}
-            deactivate={deactivateCalculation}
         />
         
-        {renderDominance && <Dominance
+        {matrixData && <Dominance
           matrix={matrixData.clone()}
 
          />}

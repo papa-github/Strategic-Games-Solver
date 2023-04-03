@@ -6,7 +6,7 @@ import Matrix from './Matrix';
 
 
 // eslint-disable-next-line react/prop-types, no-empty-pattern
-const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function}) => {
+const EditableMatrix = (props: {handleCalculate: Function}) => {
 
   
 
@@ -22,27 +22,27 @@ const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function})
     const newData = [...matrixData];
     newData[rowIndex][colIndex] = event.target.value;
     setMatrixData(newData);
-    props.deactivate()
+    
   };
 
   const handleRowHeaderChange = (event: React.ChangeEvent<HTMLInputElement>, rowIndex: number) => {
     const newHeaders = [...rowHeaders];
     newHeaders[rowIndex] = event.target.value;
     setRowHeaders(newHeaders);
-    props.deactivate()
+    
   };
 
   const handleColHeaderChange = (event: React.ChangeEvent<HTMLInputElement>, colIndex: number) => {
     const newHeaders = [...colHeaders];
     newHeaders[colIndex] = event.target.value;
     setColHeaders(newHeaders);
-    props.deactivate()
+    
   };
 
   const handleAddRow = () => {
     setMatrixData([...matrixData, Array.from({ length: matrixData[0].length }, () => '')]);
     setRowHeaders([...rowHeaders, `Row ${matrixData.length + 1}`]);
-    props.deactivate()
+    
   };
 
   const handleRemoveRow = (rowIndex: number) => {
@@ -56,7 +56,7 @@ const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function})
     } else{
       alert("You must have a least one row")
     }
-    props.deactivate()
+    
     
   };
 
@@ -65,7 +65,7 @@ const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function})
       prevData.map((row) => [...row, ''])
     );
     setColHeaders([...colHeaders, `Col ${matrixData[0].length + 1}`]);
-    props.deactivate()
+    
   };
 
   const handleRemoveColumn = (colIndex: number) => {
@@ -80,7 +80,7 @@ const EditableMatrix = (props: {handleCalculate: Function, deactivate:Function})
     }else{
       alert("You must have at least one column")
     }
-    props.deactivate()
+    
     
   };
 

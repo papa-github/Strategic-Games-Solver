@@ -66,6 +66,6 @@ function Dominance(props: { matrix: Matrix}) {
       
 }
 
-export default Dominance
+export default React.memo(Dominance)
                
   
