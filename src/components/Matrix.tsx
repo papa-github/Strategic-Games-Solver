@@ -161,12 +161,61 @@ class Matrix {
     }
 
     size(): number {
-        let count = 0;
-        for (let row of this.matrixData) {
-          count += row.length;
-        }
-        return count;
+      let count = 0;
+      for (let row of this.matrixData) {
+        count += row.length;
       }
+      return count;
+    }
+
+    display() {
+      return (
+        <div>
+          <div className="matrix-container">
+            <div className="player1">{this.player1Name}</div>
+            <div className="player2">{this.player2Name}</div>
+            <div className="matrixTable">
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    {this.colHeaders.map((colHeader, index) => (
+                      <th key={index}>
+                        {colHeader}
+                      </th>
+                    ))}
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.matrixData.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      <th>
+                        {this.rowHeaders[rowIndex]}
+                      </th>
+                      {row.map((cellData, colIndex) => (
+                        <td key={colIndex}>
+                          {cellData}
+                        </td>
+                      ))}
+                      <td></td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td></td>
+                    {this.colHeaders.map((_, index) => (
+                      <td key={index}></td>
+                    ))}
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
       
       
 
