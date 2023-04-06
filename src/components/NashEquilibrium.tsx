@@ -1,4 +1,7 @@
 import Matrix from "./Matrix";
+import '../styles/mixednash.css'
+import { InlineMath, BlockMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
 
 function NashEquilibrium(props: {param: Matrix}) {
     let matrix = props.param
@@ -6,7 +9,7 @@ function NashEquilibrium(props: {param: Matrix}) {
     function findPureNash() {
         const nashEquilibria = [];
         const rowMaxValues = matrix.matrixData.map(row => Math.max(...row.map(cell => Number(cell.split(",")[1]))));
-        const colMaxValues = matrix.matrixData[0].map((_, j) => Math.max(...matrix.matrixData.map(row => Number(row[j].split(",")[0]))));
+        const colMaxValues: number[] = matrix.matrixData[0].map((_, j) => Math.max(...matrix.matrixData.map(row => Number(row[j].split(",")[0]))));
         
         for (let i = 0; i < matrix.matrixData.length; i++) {
           for (let j = 0; j < matrix.matrixData[i].length; j++) {
@@ -74,82 +77,85 @@ function NashEquilibrium(props: {param: Matrix}) {
         let payoff1: string = p1ExpectedPayoff.get(`EU(${player1Strategies[0]})`) as string;
         let eq = (nerdamer(payoff1).evaluate(solveQ1)).text('fractions');
         let payoff2: string = p2ExpectedPayoff.get(`EU(${player2Strategies[0]})`) as string;
-        let eq2 = (nerdamer(payoff2).evaluate(solveP1)).text('fractions');
-
-        console.log(solveP1)
+        let eq2 = (nerdamer(payoff2).evaluate(solveP1)).text('fractions')
 
         const p1PayoffKeys =   Array.from(p1ExpectedPayoff.keys())
         const p1PayoffValues = Array.from(p1ExpectedPayoff.values())
         const p2PayoffKeys =  Array.from(p2ExpectedPayoff.keys())
         const p2PayoffValues = Array.from(p2ExpectedPayoff.values())
-
-        return(
+        
+        return (
             <div className="mixed-nash">
-                <p>Each player must choose a mix of pure strategies so as to make every other player indifferent between any mix of the pure strategies that appear in their own mixed strategy.</p>
-                <p>For a player to be mixing their strategies in Nash Equilibrium, then each strategy must yield the same expected payoff.</p>
-                <p>Assume that {matrix.player1Name} plays {player1Strategies.join(" , ").toString()} with probabilties {pProbs.join(" , ")}</p>
-                <p>Assume that {matrix.player2Name} plays {player2Strategies.join(" , ").toString()} with probabilties {qProbs.join(" , ")}</p>
-                <hr />
-                <p>{matrix.player1Name}'s Expected Payoff:</p>
-                <div className="expected-payoff-formulas">{
-                        p1PayoffKeys.map((key, index) => (
-                        <div key={index}>
-                            <p>{key} = {p1ExpectedPayoff.get(key)}</p>
-                        </div>
-                        ))
-                    }
-                </div>
-                <p> Once again, in a mixed strategy nash equilibrium, each strategy must have the same expected payoff: </p>
-                <p> 
-                    {
-                        //Create a map function that joins every key in the p1ExpectedPayoff map with an equals sign
-                        (p1PayoffKeys.join(" = ")).toString()
-                    }
-                    
-                </p>
-                <p>
-                    {
-                        (p1PayoffValues.join(" = ")).toString()
-                    }
-                </p>
-                {solution2}
-                <hr />
-                <p>{matrix.player2Name}'s Expected Payoff:</p>
-                <div className="expected-payoff-formulas">{
-                        p2PayoffKeys.map((key, index) => (
-                        <div key={index}>
-                            <p>{key} = {p2ExpectedPayoff.get(key)}</p>
-                        </div>
-                        ))
-                    }
-                </div>
-                <p> Once again, in a mixed strategy nash equilibrium, each strategy must have the same expected payoff: </p>
-                <p> 
-                    {
-                        //Create a map function that joins every key in the p1ExpectedPayoff map with an equals sign
-                        (p2PayoffKeys.join(" = ")).toString()
-                    }
-                </p>
-                <p>
-                    {
-                        (p2PayoffValues.join(" = ")).toString()
-                    }
-                </p>
-                {solution1}
-                <hr />
-                <p>Following this mixed strategy: </p>
-                <p>{matrix.player1Name}'s' payoff is: </p>
-                <p> {
-                        strReplace(solveQ1, p1PayoffValues[0])
-                    } = {eq}
-                </p>
-                <p>{matrix.player2Name}'s' payoff is: </p>
-                <p> {
-                        strReplace(solveP1, p2PayoffValues[0])
-                    } = {eq2}
-                </p>
+                <p>The game has no pure strategy Nash equilibrium</p>
+              <p>
+                Therefore, each player must choose a mix of pure strategies so as to make every other player indifferent between any mix of the pure strategies that appear in their own mixed strategy.
+              </p>
+              <p>
+                For a player to be mixing their strategies in Nash Equilibrium, then each strategy must yield the same expected payoff.
+              </p>
+              <p>
+                Assume that <b>{matrix.player1Name}</b> plays <InlineMath>{formatExpression(player1Strategies.join(" , ").toString())}</InlineMath> with probabilities <InlineMath>{formatExpression(pProbs.join(" , "))}</InlineMath>
+              </p>
+              <p>
+                Assume that <b>{matrix.player2Name}</b> plays <InlineMath>{formatExpression(player2Strategies.join(" , ").toString())}</InlineMath> with probabilities <InlineMath>{formatExpression(qProbs.join(" , "))}</InlineMath>
+              </p>
+              <hr />
+              <h3><b>{matrix.player1Name}'s</b> Expected Payoff:</h3>
+              <div className="expected-payoff-formulas">
+                {p1PayoffKeys.map((key, index) => (
+                  <div key={index}>
+                    <p>
+                      <InlineMath>{formatExpression(key + " = " + p1ExpectedPayoff.get(key))}</InlineMath>
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p>
+                Once again, in a mixed strategy Nash Equilibrium, each strategy must have the same expected payoff:
+              </p>
+              <p>
+                <InlineMath>{formatExpression(p1PayoffKeys.join(" = ").toString())}</InlineMath>
+              </p>
+              <p>
+                <InlineMath>{formatExpression(p1PayoffValues.join(" = ").toString())}</InlineMath>
+              </p>
+              {solution2}
+              <hr />
+              <h3><b>{matrix.player2Name}'s</b> Expected Payoff:</h3>
+              <div className="expected-payoff-formulas">
+                {p2PayoffKeys.map((key, index) => (
+                  <div key={index}>
+                    <InlineMath>{formatExpression(key + " = " + p2ExpectedPayoff.get(key))}</InlineMath>
+                  </div>
+                ))}
+              </div>
+              <p>
+                Once again, in a mixed strategy Nash Equilibrium, each strategy must have the same expected payoff:
+              </p>
+              <p>
+                <InlineMath>{formatExpression(p2PayoffKeys.join(" = ").toString())}</InlineMath>
+              </p>
+              <p>
+                <InlineMath>{formatExpression(p2PayoffValues.join(" = ").toString())}</InlineMath>
+              </p>
+              {solution1}
+              <hr />
+              <p>Following this mixed strategy:</p>
+              <p><b>{matrix.player1Name}'s</b> payoff is:</p>
+              <p>
+                <InlineMath>
+                  {formatExpression(strReplace(solveQ1, p1PayoffValues[0]) + " = " + eq)}
+                </InlineMath>
+              </p>
+              <p><b>{matrix.player2Name}'s</b> payoff is:</p>
+              <p>
+                <InlineMath>
+                  {formatExpression(strReplace(solveP1, p2PayoffValues[0]) + " = " + eq2)}
+                </InlineMath>
+              </p>
             </div>
-        )
+        );
+          
     }
 
     function joinEquations(arr: string[]): string[] {
@@ -177,6 +183,28 @@ function NashEquilibrium(props: {param: Matrix}) {
         }
         return str;
     }
+
+    function formatExpression(str: string): string {
+        const matches = str.match(/[a-zA-Z]+\d+/g);
+        console.log("here", str)
+        let formattedStr = str;
+      
+        if (matches !== null) {
+          matches.forEach((match) => {
+            // Extract variable name and subscript from match
+            const varName = match.match(/[a-zA-Z]+/)![0];
+            const sub = match.match(/\d+/)![0];
+            
+            // Replace match with formatted variable name (with subscript)
+            formattedStr = formattedStr.replace(match, `${varName}_${sub}`);
+          });
+        }
+      
+        // Match fractions (e.g. "2/3") and format them using LaTeX
+        formattedStr = formattedStr.replace(/(\d+)\/(\d+)/g, "\\frac{$1}{$2}");
+      
+        return  formattedStr;
+    }
       
 
     const renderSolution = (solveP: Object, prob1: string)  => {
@@ -187,7 +215,7 @@ function NashEquilibrium(props: {param: Matrix}) {
                 {
                     Object.keys(solveP).map((key, index) => (
                     <div key={index}>
-                        <p>{key} = {nerdamer(solveP[key as keyof typeof solveP]).text('fractions')}</p>
+                        <p><InlineMath>{formatExpression(key + " = " + nerdamer(solveP[key as keyof typeof solveP]).text('fractions'))}</InlineMath></p>
                         
                     </div>
                     ))

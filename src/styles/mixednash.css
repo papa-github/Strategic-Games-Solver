@@ -1,0 +1,102 @@
+.nash{
+    width: 60%;
+    border: black 1px solid;
+    border-radius: 1%;
+    margin: auto;
+    padding: 5%;
+    box-sizing: border-box;
+}
+
+.mixed-nash {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    
+  }
+  
+  .mixed-nash p {
+    margin-bottom: 16px;
+    text-align: justify;
+  }
+  
+  .mixed-nash hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 32px 0;
+  }
+  
+  .mixed-nash .expected-payoff-formulas {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .mixed-nash .expected-payoff-formulas div {
+    flex: 0 0 50%;
+    padding: 0 16px 16px 0;
+  }
+  
+  .mixed-nash .expected-payoff-formulas p {
+    margin: 0;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex {
+    display: inline-block;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .base {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .frac-line {
+    border-bottom: 1px solid;
+    margin: 0 0.2em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .frac-line::before {
+    display: block;
+    content: "";
+    border-top: 1px solid;
+    margin-top: -0.15em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .frac-line::after {
+    display: block;
+    content: "";
+    border-bottom: 1px solid;
+    margin-bottom: -0.15em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .frac-line::first-child {
+    margin-right: 0.2em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .sqrt-sign {
+    display: inline-block;
+    border-bottom: 1px solid;
+    margin-right: 0.2em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .supsub {
+    font-size: 0.8em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .sub {
+    margin-left: -0.15em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .sup {
+    margin-right: -0.15em;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .overline {
+    text-decoration: overline;
+  }
+  
+  .mixed-nash .expected-payoff-formulas .katex .operatorname {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+  }
+  
