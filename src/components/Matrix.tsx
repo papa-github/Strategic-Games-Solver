@@ -128,6 +128,7 @@ class Matrix {
         return new Matrix(this._matrixData.map((inner) => inner.slice()),[...this._rowHeaders],[...this._colHeaders],this.player1Name, this.player2Name)
     }
 
+    //Returns an array of arrays of numbers, where each array is a row of the matrix and number is a cell containing the payoff for player 1
     getPlayer1Payoffs():number[][]{
         const result = [];
         for (let i = 0; i < this.matrixData.length; i++) {

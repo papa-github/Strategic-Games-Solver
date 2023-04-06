@@ -11,11 +11,6 @@ function MatrixCalculator() {
 
   const [matrixData, setMatrixData] = useState<Matrix>()
 
-  // useEffect(() => {
-  //   setMatrixData(inputMatrix);
-  //   console.log("Matrix Data Updated")
-  //   setRenderDominance(true);
-  // }, [inputMatrix]);
 
   function HandleCalculate(matrix: Matrix) {
     setMatrixData(matrix)
