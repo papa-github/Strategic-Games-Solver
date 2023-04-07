@@ -7,7 +7,7 @@ import Dominance from "./Dominance";
 function NashEquilibrium(props: {param: Matrix}) {
     let [matrix, dominated] = Dominance(props.param)
 
-    function findPureNash() {
+    function findPureNash(): JSX.Element {
         const nashEquilibria = [];
         const rowMaxValues = matrix.matrixData.map(row => Math.max(...row.map(cell => Number(cell.split(",")[1]))));
         const colMaxValues: number[] = matrix.matrixData[0].map((_, j) => Math.max(...matrix.matrixData.map(row => Number(row[j].split(",")[0]))));
@@ -23,8 +23,8 @@ function NashEquilibrium(props: {param: Matrix}) {
             }
           }
         }
-        
-        return nashEquilibria;
+        if (nashEquilibria.length === 0){return <p> There is no pure Nash equilibrium in this game</p> }
+        return ( matrix.display(nashEquilibria));
     }
       
 
@@ -59,13 +59,25 @@ function NashEquilibrium(props: {param: Matrix}) {
             })
         );
         nerdamer.set('SOLUTIONS_AS_OBJECT', true)
-        const solveP1: Object  = nerdamer.solveEquations(joinEquations(Array.from(p2ExpectedPayoff.values())))
-        const solveQ1: Object  = nerdamer.solveEquations(joinEquations(Array.from(p1ExpectedPayoff.values())))
+        let solveP1: Object;
+        let solveQ1: Object;
+        
+        try {
+          solveP1 = nerdamer.solveEquations(joinEquations(Array.from(p2ExpectedPayoff.values())))
+          solveQ1 =  nerdamer.solveEquations(joinEquations(Array.from(p1ExpectedPayoff.values())))
+        } catch (error) {
+          return(
+            <p>There is no mixed strategy nash in this game</p>
+          )
+        }
+        
         
         // Probability of the last choice is an expression of the other probabilities (e.g. 1 - p1 - p2 - p3 ...)
         // must be set separately
         solveP1[(pProbs[pProbs.length - 1]) as keyof typeof solveP1] = nerdamer(pProbs[pProbs.length - 1]).evaluate(solveP1)
         solveQ1[(qProbs[pProbs.length - 1]) as keyof typeof solveQ1] = nerdamer(qProbs[pProbs.length - 1]).evaluate(solveQ1)
+        
+        
         
         //Using solveP1 and solveQ1 to calculate the payoffs messes up the solveP1 and solveQ1 objects, so render solution before.
         delete solveP1["e" as keyof typeof solveP1]; delete solveP1["pi" as keyof typeof solveP1]
@@ -87,9 +99,9 @@ function NashEquilibrium(props: {param: Matrix}) {
         
         return (
             <div className="mixed-nash">
-                <p>The game has no pure strategy Nash equilibrium</p>
+              <p>The game has a mixed strategy Nash equilibrium</p>
               <p>
-                Therefore, each player must choose a mix of pure strategies so as to make every other player indifferent between any mix of the pure strategies that appear in their own mixed strategy.
+              Each player can choose a mix of pure strategies so as to make every other player indifferent between any mix of the pure strategies that appear in their own mixed strategy.
               </p>
               <p>
                 For a player to be mixing their strategies in Nash Equilibrium, then each strategy must yield the same expected payoff.
@@ -169,6 +181,8 @@ function NashEquilibrium(props: {param: Matrix}) {
 
     function generateStrings(letter: string, num: number): string[] {
         const result: string[] = [];
+        if (num === 1) {console.log(num === 1)};
+        
         for (let i = 1; i < num; i++) {
           result.push(`${letter}${i}`);
         }
@@ -226,24 +240,27 @@ function NashEquilibrium(props: {param: Matrix}) {
       
       
     function render():JSX.Element{
-        const pureResult = findPureNash()        
-        if (pureResult.length !== 0){
-            return(
-                matrix.display(pureResult)
-            )
-        }
-        else{
-            return findMixedNash()
-        }
+        return(
+            <div>
+              {findPureNash()}
+              <hr />
+              {findMixedNash()}
+            </div>
+        )      
     }
 
     return(
-        <div className="matrix-calculation">
-            {dominated}
-            <h2> Now we can find any Nash Equilibria</h2>
-            {
-                render()
-            }
+        <div>
+          <div className="matrix-calculation">
+                {dominated}
+          </div>
+          <div className="matrix-calculation">
+            <h3>Pure Strategy Nash Equilibrium</h3>
+            {findPureNash()}
+            <hr />
+            <h3>Mixed Strategy Nash Equilibrium</h3>
+            {findMixedNash()}
+          </div>
         </div>
     )
 }

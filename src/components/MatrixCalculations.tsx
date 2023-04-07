@@ -4,7 +4,7 @@ import Matrix from "./Matrix"
 import NashEquilibrium from "./NashEquilibrium"
 import KaldorHicks from "./KaldorHicks"
 import Pareto from "./Pareto"
-import ".."
+import "../styles/MatrixCalculations.css"
 
 function MatrixCalculations(props: {inputMatrix: Matrix}) {
          
