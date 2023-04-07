@@ -1,5 +1,3 @@
-import { SetStateAction, useEffect, useState } from "react"
-import Dominance from "./Dominance"
 import Matrix from "./Matrix"
 import NashEquilibrium from "./NashEquilibrium"
 import KaldorHicks from "./KaldorHicks"

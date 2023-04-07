@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.11",
     "katex": "^0.16.4",
     "mathjs": "^11.8.0",
+    "mathsteps": "^0.2.0",
     "nerdamer": "^1.1.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@types/katex": "^0.16.0",
-    "@types/react-katex": "^3.0.0"
+    "@types/react-katex": "^3.0.0",
+    "react-router-dom": "^6.10.0"
   }
 }

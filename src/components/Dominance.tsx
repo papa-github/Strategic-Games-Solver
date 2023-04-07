@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import Matrix from './Matrix';
 
 function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
@@ -29,6 +28,7 @@ function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
         }
 
         let rowHeaderCopy = [...currentMatrix.rowHeaders]
+        // eslint-disable-next-line array-callback-return
         removedRows.map(num => {
             let message = ` ${currentMatrix.player1Name}: ${rowHeaderCopy[num[1]]} is strictly dominated by ${rowHeaderCopy[num[0]]}`
             currentMatrix.removeRow(rowHeaderCopy[num[1]]); //Remove Row from Matrix
@@ -55,6 +55,7 @@ function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
         }
         
         let colHeaderCopy = [...currentMatrix.colHeaders]
+        // eslint-disable-next-line array-callback-return
         removedCols.map(num => {
             let message = ` ${currentMatrix.player2Name}: ${colHeaderCopy[num[1]]} is strictly dominated by ${colHeaderCopy[num[0]]}`
 
@@ -67,7 +68,7 @@ function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
     
     return ([currentMatrix,
         <div>
-            <h2> First, we eliminate strictly dominated strategies to reduce the payoff matrix:</h2>
+            <h3> Eliminate strictly dominated strategies to reduce the payoff matrix:</h3>
             {
                 steps.map((step, index) =>(
                     <div key = {index}>

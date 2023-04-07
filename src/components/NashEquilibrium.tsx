@@ -1,14 +1,17 @@
 import Matrix from "./Matrix";
 import '../styles/mixednash.css'
-import { InlineMath, BlockMath } from 'react-katex';
+import { InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import Dominance from "./Dominance";
+import getPareto from "../helper/getPareto";
 
 function NashEquilibrium(props: {param: Matrix}) {
     let [matrix, dominated] = Dominance(props.param)
+    let payoffDominant: number[][] | null = null;
+    let riskDominant: number[][] | null = null;
 
     function findPureNash(): JSX.Element {
-        const nashEquilibria = [];
+        const nashEquilibria: number[][] = [];
         const rowMaxValues = matrix.matrixData.map(row => Math.max(...row.map(cell => Number(cell.split(",")[1]))));
         const colMaxValues: number[] = matrix.matrixData[0].map((_, j) => Math.max(...matrix.matrixData.map(row => Number(row[j].split(",")[0]))));
         
@@ -24,7 +27,35 @@ function NashEquilibrium(props: {param: Matrix}) {
           }
         }
         if (nashEquilibria.length === 0){return <p> There is no pure Nash equilibrium in this game</p> }
+        else {
+          if (nashEquilibria.length === 1){ // if there is only one pure nash equilibrium, then it is both payoff and risk dominant
+            payoffDominant = nashEquilibria; riskDominant = nashEquilibria
+          }
+          else
+          {
+            //getPareto should return an array containing the pareto superior equilibria (in an array of array but only the first one is needed)
+            let paretoEquilibra = getPareto(getPayoffs(nashEquilibria.map(cell => matrix.matrixData[cell[0]][cell[1]])))
+            //paretoEquilibria is specifies the indexes in nashEquilibria that are pareto superior. We can then use those indexes to get the matrix indexes.
+            payoffDominant = paretoEquilibra.map(cell => nashEquilibria[cell[0]])
+            riskDominant = getRiskDominant(nashEquilibria)
+        }
+        }
         return ( matrix.display(nashEquilibria));
+    }
+
+    function getPayoffs(inputs: string[]): number[][][] {
+      const matrix: number[][][] = [];
+      for (let i = 0; i < inputs.length; i++) {
+        matrix[i] = [];
+        const payoffs: number[] = inputs[i].split(',').map(Number);
+        matrix[i][i] = payoffs;
+        for (let j = 0; j < inputs.length; j++) {
+          if (i !== j) {
+            matrix[i][j] = [Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY];
+          }
+        }
+      }
+      return matrix;
     }
       
 
@@ -219,6 +250,32 @@ function NashEquilibrium(props: {param: Matrix}) {
       
         return  formattedStr;
     }
+
+    function getRiskDominant(nashEquilibria: number[][]): number[][] {
+      if (nashEquilibria.length === 1) return nashEquilibria; // There is only one nash equilibrium, so it is risk dominant
+      let riskDominantArray: number[][] = [];
+      let numberMatrix = matrix.convertToNumberMatrix();
+      
+      for (let i = 0; i < nashEquilibria.length; i++) {
+        // We are now at a specific nash equilibrium
+        let rDominant: boolean = true;
+        for (let k = 0; k < nashEquilibria.length; k++) {
+          if (i === k) continue; // We don't want to compare the same nash equilibrium
+          // We are now at a different nash equilibrium
+          //Now we must get the product of the deviation losses
+          let p1DeviateFromCurrent = numberMatrix[nashEquilibria[i][0]][nashEquilibria[i][1]][0] - numberMatrix[nashEquilibria[k][0]][nashEquilibria[i][1]][0];
+          let p2DeviateFromCurrent = numberMatrix[nashEquilibria[i][0]][nashEquilibria[i][1]][1] - numberMatrix[nashEquilibria[i][0]][nashEquilibria[k][1]][1];
+          let p1DeviateFromOther = numberMatrix[nashEquilibria[k][0]][nashEquilibria[k][1]][0] - numberMatrix[nashEquilibria[i][0]][nashEquilibria[k][1]][0];
+          let p2DeviateFromOther = numberMatrix[nashEquilibria[k][0]][nashEquilibria[k][1]][1] - numberMatrix[nashEquilibria[k][0]][nashEquilibria[i][1]][1];
+          if (p1DeviateFromCurrent * p2DeviateFromCurrent < p1DeviateFromOther * p2DeviateFromOther) {
+            rDominant = false;
+            break;
+          }
+        }
+        if (rDominant) riskDominantArray.push(nashEquilibria[i]);
+      } 
+      return riskDominantArray;
+    }
       
 
     const renderSolution = (solveP: Object, prob1: string)  => {
@@ -237,29 +294,52 @@ function NashEquilibrium(props: {param: Matrix}) {
             </div>
         );
     };
-      
-      
-    function render():JSX.Element{
-        return(
-            <div>
-              {findPureNash()}
-              <hr />
-              {findMixedNash()}
-            </div>
-        )      
+
+    function renderPayoffDominant(): JSX.Element{
+      if (payoffDominant === null) return <p></p>
+      console.log(payoffDominant)
+      return (
+        <div>
+          
+          <p>The payoff dominant equilibria is the pareto superior Nash equilibria.</p>
+          <p>Meaning, no other equilibrium yields greater payoffs to either player</p>
+          {matrix.display(payoffDominant)}
+        </div>
+      )
+    }
+
+    function renderRiskDominant(): JSX.Element{
+      if (riskDominant === null) return <p></p>
+      return (
+        <div>
+          <p>The risk dominant equilibria is least risky Nash equilibria.</p>
+          <p>Meaning, there is the least utility lost in this equilibrium if other players were to deviate</p>
+          {matrix.display(riskDominant)}
+        </div>
+      )
     }
 
     return(
         <div>
-          <div className="matrix-calculation">
+          <div className="matrix-calculation" id="dominated-strategy">
                 {dominated}
           </div>
-          <div className="matrix-calculation">
+          <div className="matrix-calculation" id="nash">
             <h3>Pure Strategy Nash Equilibrium</h3>
             {findPureNash()}
             <hr />
             <h3>Mixed Strategy Nash Equilibrium</h3>
             {findMixedNash()}
+            <hr />
+            <div>
+            <h3>Payoff Dominant</h3>
+              {renderPayoffDominant()}
+            </div>
+            <hr />
+            <div>
+            <h3>Risk Dominant</h3>
+            {renderRiskDominant()}
+            </div>
           </div>
         </div>
     )
