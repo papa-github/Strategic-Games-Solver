@@ -2,9 +2,10 @@ import Matrix from "./Matrix";
 import '../styles/mixednash.css'
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import Dominance from "./Dominance";
 
 function NashEquilibrium(props: {param: Matrix}) {
-    let matrix = props.param
+    let [matrix, dominated] = Dominance(props.param)
 
     function findPureNash() {
         const nashEquilibria = [];
@@ -186,7 +187,6 @@ function NashEquilibrium(props: {param: Matrix}) {
 
     function formatExpression(str: string): string {
         const matches = str.match(/[a-zA-Z]+\d+/g);
-        console.log("here", str)
         let formattedStr = str;
       
         if (matches !== null) {
@@ -238,7 +238,8 @@ function NashEquilibrium(props: {param: Matrix}) {
     }
 
     return(
-        <div className="nash">
+        <div className="matrix-calculation">
+            {dominated}
             <h2> Now we can find any Nash Equilibria</h2>
             {
                 render()

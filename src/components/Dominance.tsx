@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import Matrix from './Matrix';
 
-function Dominance(props: { matrix: Matrix, setReducedMatrix: React.Dispatch<React.SetStateAction<Matrix | undefined>>}) {
-    const thisMatrix:Matrix = props.matrix
+function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
+    const thisMatrix:Matrix = matrix.clone(); //Clone matrix to prevent mutation of original matrix
 
     const steps: [string, JSX.Element][] = [["Starting Matrix", thisMatrix.display()]]; //Each step contains a message (" A dominated by B", and a Matrix (The prev matrix with row/col A removed))
   
@@ -57,21 +57,15 @@ function Dominance(props: { matrix: Matrix, setReducedMatrix: React.Dispatch<Rea
         let colHeaderCopy = [...currentMatrix.colHeaders]
         removedCols.map(num => {
             let message = ` ${currentMatrix.player2Name}: ${colHeaderCopy[num[1]]} is strictly dominated by ${colHeaderCopy[num[0]]}`
-            // console.log("Matrix before removal")
-            // console.log(currentMatrix)
+
             currentMatrix.removeCol(colHeaderCopy[num[1]]); //Remove dominated column from Matrix
-            // console.log("Matrix after removal")
-            // console.log(currentMatrix)
+
             //Add message to steps
             steps.push([message, currentMatrix.clone().display()])
         })  
     }
-    useEffect(()=>{
-        props.setReducedMatrix(currentMatrix)
-    })
     
-
-    return (
+    return ([currentMatrix,
         <div>
             <h2> First, we eliminate strictly dominated strategies to reduce the payoff matrix:</h2>
             {
@@ -83,10 +77,10 @@ function Dominance(props: { matrix: Matrix, setReducedMatrix: React.Dispatch<Rea
                 ))
             }
         </div>
-    );
+    ]);
       
 }
 
-export default React.memo(Dominance) //Some optimisation, tells react that same input always returns same output
+export default Dominance //Some optimisation, tells react that same input always returns same output
                
   

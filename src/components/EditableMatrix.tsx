@@ -166,19 +166,5 @@ const EditableMatrix = (props: {handleCalculate: Function}) => {
   
 }
 
-EditableMatrix.propTypes = {
-  matrixData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-  setMatrixData: PropTypes.func,
-  rowHeaders: PropTypes.arrayOf(PropTypes.string),
-  setRowHeaders: PropTypes.func,
-  colHeaders: PropTypes.arrayOf(PropTypes.string),
-  setColHeaders: PropTypes.func,
-  player1Name: PropTypes.string,
-  setPlayer1Name: PropTypes.func,
-  player2Name: PropTypes.string,
-  setPlayer2Name: PropTypes.func,
-  handleCalculate: PropTypes.func
-}
-
 
 export default EditableMatrix;

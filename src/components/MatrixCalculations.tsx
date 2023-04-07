@@ -1,19 +1,18 @@
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import Dominance from "./Dominance"
 import Matrix from "./Matrix"
 import NashEquilibrium from "./NashEquilibrium"
 import KaldorHicks from "./KaldorHicks"
 import Pareto from "./Pareto"
+import ".."
 
-function MatrixCalculations(props: {param: Matrix}) {
-    let matrix = props.param
-    const [reducedMatrix, setReducedMatrix] = useState<Matrix>()
+function MatrixCalculations(props: {inputMatrix: Matrix}) {
+         
     return(
         <div>
-            <Dominance matrix={matrix} setReducedMatrix={setReducedMatrix} />
-            {reducedMatrix && <NashEquilibrium param={reducedMatrix} />}
-            {reducedMatrix && <Pareto param={reducedMatrix} />}
-            {reducedMatrix && <KaldorHicks param={reducedMatrix} />}
+            {<NashEquilibrium param={props.inputMatrix} />}
+            {<Pareto param={props.inputMatrix} />}
+            {<KaldorHicks param={props.inputMatrix} />}
             
         </div>
     )

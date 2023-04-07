@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import EditableMatrix from '../components/EditableMatrix';
 import '../styles/matrix.css'
-import Dominance from '../components/Dominance';
 import Matrix from '../components/Matrix';
 import MatrixCalculations from '../components/MatrixCalculations';
 
@@ -14,6 +13,7 @@ function MatrixCalculator() {
 
   function HandleCalculate(matrix: Matrix) {
     setMatrixData(matrix)
+    console.log("Setting Matrix Data", matrix)
   }
 
   return (
@@ -24,7 +24,7 @@ function MatrixCalculator() {
         />
         
         {matrixData && <MatrixCalculations
-          param={matrixData.clone()}
+          inputMatrix={matrixData.clone()}
 
          />}
     </div>
