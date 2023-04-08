@@ -7,7 +7,7 @@ import "../styles/MatrixCalculations.css"
 function MatrixCalculations(props: {inputMatrix: Matrix}) {
          
     return(
-        <div>
+        <div className="calculations-container">
             {<NashEquilibrium param={props.inputMatrix} />}
             {<Pareto param={props.inputMatrix} />}
             {<KaldorHicks param={props.inputMatrix} />}

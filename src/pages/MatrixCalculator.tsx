@@ -4,6 +4,7 @@ import EditableMatrix from '../components/EditableMatrix';
 import '../styles/matrix.css'
 import Matrix from '../components/Matrix';
 import MatrixCalculations from '../components/MatrixCalculations';
+import '../styles/MatrixCalculator.css'
 
 
 function MatrixCalculator() {

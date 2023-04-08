@@ -1,0 +1,8 @@
+.matrix-calculator{
+    display: flex;
+    width: min-content;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    
+}
