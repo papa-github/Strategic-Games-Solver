@@ -301,7 +301,7 @@ function NashEquilibrium(props: {param: Matrix}) {
       return (
         <div>
           
-          <p>The payoff dominant equilibria is the pareto superior Nash equilibria.</p>
+          <p>The payoff dominant equilibria is the Pareto superior Nash equilibria.</p>
           <p>Meaning, no other equilibrium yields greater payoffs to either player</p>
           {matrix.display(payoffDominant)}
         </div>
