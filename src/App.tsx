@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import MatrixCalculator from './pages/MatrixCalculator';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import Header from './pages/Header';
 import ExternalityCalculator from './pages/ExternalityCalculator';
 import LemonsAndOranges from './pages/LemonsAndOranges';
@@ -12,10 +12,10 @@ import Footer from './pages/Footer';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
     <Header />
       <Routes>
-        <Route path='/Strategic-Games-Solver' element={<MatrixCalculator />} />
+        <Route path='/' element={<MatrixCalculator />} />
         <Route path='/MatrixCalculator' element={<MatrixCalculator />} />
         <Route path='/ExternalityCalculator' element={<ExternalityCalculator />} />
         <Route path='/LemonsAndOranges' element={<LemonsAndOranges />} />
@@ -25,7 +25,7 @@ export default function App() {
         <Route path="/About" element={<h1>Created by Papa Onwona-Agyeman</h1>} />
       </Routes>
     <Footer/>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

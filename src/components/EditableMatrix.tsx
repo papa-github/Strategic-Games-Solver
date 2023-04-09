@@ -98,7 +98,7 @@ const EditableMatrix = (props: {handleCalculate: Function}) => {
 
   return (
     <div>
-      <div className="matrix-container">
+      <div className="editable-matrix-container">
         <div className="player1"><input type="text" value={player1Name} onChange={(event) => setPlayer1Name(event.target.value)} /></div>
         <div className="player2"><input type="text" value={player2Name} onChange={(event) => setPlayer2Name(event.target.value)} /></div>
         <div className="matrixTable">

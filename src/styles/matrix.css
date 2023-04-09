@@ -1,23 +1,38 @@
 .matrix-container {
-    display: inline-grid;
-    grid-template-columns: min-content;
-    grid-template-rows: min-content;
-    grid-template-areas:
-      ". player2"
-      "player1 matrixTable"
-      ". calculate-button-container";
-    gap: 5px;
-  }
+  display: grid;
+  grid-template-areas:
+    ". player2"
+    "player1 matrixTable";
+  gap: 5px;
+  margin: auto;
+  width: min-content;
+  height: min-content;
+}
+
+.editable-matrix-container {
+  display: grid;
+  grid-template-columns: min-content;
+  grid-template-rows: min-content;
+  grid-template-areas:
+    ". player2"
+    "player1 matrixTable"
+    ". calculate-button-container";
+  gap: 5px;
+}
   
 .player1 {
   grid-area: player1;
   display: flex;
   justify-content:right;
   align-items: center;
+  white-space: nowrap;
 }
 
 .player2 {
   grid-area: player2;
+  display: flex;
+  justify-content:center;
+
 }
 
 .table-header {
@@ -26,6 +41,7 @@
 
 .matrixTable {
   grid-area: matrixTable;
+  width: min-content;
 }
 
 .calculate-button-container{
@@ -34,14 +50,12 @@
   justify-content: right;
 }
 
-
-
 table {
   border-collapse: collapse;
-  margin: 25px 0;
+  margin: 5px;
   font-size: 0.9em;
   font-family: sans-serif;
-  min-width: 400px;
+  min-width: 200px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 

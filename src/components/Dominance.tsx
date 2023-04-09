@@ -72,7 +72,7 @@ function Dominance(matrix: Matrix): [Matrix, JSX.Element] {
             {
                 steps.map((step, index) =>(
                     <div key = {index}>
-                        <p>{step[0]}</p>
+                        <p><em>{step[0]}</em></p>
                         {step[1]}
                     </div>
                 ))

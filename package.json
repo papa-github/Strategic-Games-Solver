@@ -53,5 +53,5 @@
     "gh-pages": "^5.0.0",
     "react-router-dom": "^6.10.0"
   },
-  "homepage": "http://papa-github.github.io/Strategic-Games-Solver"
+  "homepage": "http://papa-github.github.io/Strategic-Games-Solver/"
 }
