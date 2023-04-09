@@ -47,7 +47,19 @@
   text-align: center;
 }
 
+
+/* Element above footer to stop footer covering content */
+.element-above-footer {
+  margin-bottom: 80px;
+}
+
+
+
 .em{
   margin: 5px;
 }
 
+
+
+@media (max-width: 1023px) {
+}

@@ -24,6 +24,7 @@ export default function App() {
         <Route path='/SeparatingPooling' element={<SeparatingPooling />} />
         <Route path="/About" element={<h1>Created by Papa Onwona-Agyeman</h1>} />
       </Routes>
+    {<div className='element-above-footer'></div>}  
     <Footer/>
     </HashRouter>
   )
