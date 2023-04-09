@@ -8,23 +8,23 @@ import LemonsAndOranges from './pages/LemonsAndOranges';
 import DecreasingSurplus from './pages/DecreasingSurplus';
 import Rubinstein from './pages/Rubinstein';
 import SeparatingPooling from './pages/SeparatingPooling';
+import Footer from './pages/Footer';
 
 export default function App() {
   return (
     <BrowserRouter>
     <Header />
       <Routes>
-        <Route path='/:page' element={<Header />} />
-        
-        <Route index element={<MatrixCalculator />} />
+        <Route path='/Strategic-Games-Solver' element={<MatrixCalculator />} />
         <Route path='/MatrixCalculator' element={<MatrixCalculator />} />
         <Route path='/ExternalityCalculator' element={<ExternalityCalculator />} />
         <Route path='/LemonsAndOranges' element={<LemonsAndOranges />} />
         <Route path='/DecreasingSurplus' element={<DecreasingSurplus />} />
         <Route path='/Rubinstein' element={<Rubinstein />} />
         <Route path='/SeparatingPooling' element={<SeparatingPooling />} />
-        <Route path="About" element={<h1>Created by Papa Onwona-Agyeman</h1>} />
+        <Route path="/About" element={<h1>Created by Papa Onwona-Agyeman</h1>} />
       </Routes>
+    <Footer/>
     </BrowserRouter>
   )
 }

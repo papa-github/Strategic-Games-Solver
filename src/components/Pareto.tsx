@@ -8,9 +8,9 @@ function Pareto(props: {param: Matrix}) {
   return(
       <div className="matrix-calculation" id="pareto">
           <h2>Pareto Efficiency</h2>
-          <p> For a strategy to be pareto efficient,
+          <p> For a strategy to be Pareto efficient,
               there must be no alternative where a player is better off and no one is worse off</p>
-            <p>Alternatively: For a strategy, <InlineMath>s</InlineMath>,  if there exists a strategy where at least one player is better off and no one is worse off than <InlineMath>s</InlineMath> is not pareto efficient </p>
+            <p>Alternatively: For a strategy, <InlineMath>s</InlineMath>,  if there exists a strategy where at least one player is better off and no one is worse off, then <InlineMath>s</InlineMath> is not Pareto efficient </p>
           {props.param.display(result)}
       </div>
   )
