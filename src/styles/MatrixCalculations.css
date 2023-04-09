@@ -11,3 +11,9 @@
 .calculations-container{
     text-align: center;
 }
+
+@media (max-width: 768px) {
+    .matrix-calculation{
+        margin: 3% auto;
+    }
+}

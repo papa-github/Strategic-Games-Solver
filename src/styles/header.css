@@ -1,31 +1,36 @@
 .header {
     display: flex;
     justify-content: center;
+    background-color: #24252a;
 }
 
 .headerlink-title {
-    color: black;
+    color: #edf0f1;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    padding: 10px;
     text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease 0s;
+}
+
+.headerlink-title:hover{
+    background-color: rgba(0, 136, 169, 1);
 }
 
 
-.headerlink-dot {
-    opacity: 0;
-    transition: opacity 200ms linear;
-    text-align: center;
-    margin-top: -0.5rem;
-    
-}
-
-.headerlink-title:hover .headerlink-dot {
-    opacity: 1;
-}
-
-.headerlink-dot-active {
-    text-align: center;
-    margin-top: -0.5rem;
-}
 
 .headerlink-no-link {
-    pointer-events: none;
+    background-color: rgba(0, 136, 169, 1);
+}
+
+@media only screen and (max-width: 600px) {
+    .header {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .headerlink-title {
+      margin: 0.5rem 0;
+    }
 }
