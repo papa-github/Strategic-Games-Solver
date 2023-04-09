@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Strategic-Games-Solver/static/css/main.76771749.css",
-    "main.js": "/Strategic-Games-Solver/static/js/main.1da4cc3e.js",
+    "main.js": "/Strategic-Games-Solver/static/js/main.f4347fcc.js",
     "static/js/787.bb4aa06d.chunk.js": "/Strategic-Games-Solver/static/js/787.bb4aa06d.chunk.js",
     "static/media/KaTeX_AMS-Regular.ttf": "/Strategic-Games-Solver/static/media/KaTeX_AMS-Regular.853be92419a6c3766b9a.ttf",
     "static/media/KaTeX_Main-Regular.ttf": "/Strategic-Games-Solver/static/media/KaTeX_Main-Regular.9eba1d77abcf2aa6e94e.ttf",
@@ -65,11 +65,11 @@
     "static/media/KaTeX_Size3-Regular.woff2": "/Strategic-Games-Solver/static/media/KaTeX_Size3-Regular.e1951519f6f0596f7356.woff2",
     "index.html": "/Strategic-Games-Solver/index.html",
     "main.76771749.css.map": "/Strategic-Games-Solver/static/css/main.76771749.css.map",
-    "main.1da4cc3e.js.map": "/Strategic-Games-Solver/static/js/main.1da4cc3e.js.map",
+    "main.f4347fcc.js.map": "/Strategic-Games-Solver/static/js/main.f4347fcc.js.map",
     "787.bb4aa06d.chunk.js.map": "/Strategic-Games-Solver/static/js/787.bb4aa06d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.76771749.css",
-    "static/js/main.1da4cc3e.js"
+    "static/js/main.f4347fcc.js"
   ]
 }
