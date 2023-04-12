@@ -9,6 +9,7 @@ import DecreasingSurplus from './pages/DecreasingSurplus';
 import Rubinstein from './pages/Rubinstein';
 import SeparatingPooling from './pages/SeparatingPooling';
 import Footer from './pages/Footer';
+import RollbackEquilibrium from './pages/RollbackEquilibrium';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Routes>
         <Route path='/' element={<MatrixCalculator />} />
         <Route path='/MatrixCalculator' element={<MatrixCalculator />} />
+        <Route path='/RollbackEquilibrium' element={<RollbackEquilibrium />} />
         <Route path='/ExternalityCalculator' element={<ExternalityCalculator />} />
         <Route path='/LemonsAndOranges' element={<LemonsAndOranges />} />
         <Route path='/DecreasingSurplus' element={<DecreasingSurplus />} />

@@ -32,6 +32,7 @@ const Header = () => {
   //Add new links here
   const links = [
     { page: "MatrixCalculator", title: "Matrix Calculator" },
+    { page: "RollbackEquilibrium", title: "Rollback Equilibrium" },
     { page: "ExternalityCalculator", title: "Externality Calculator" },
     { page: "LemonsAndOranges", title: "Lemons And Oranges" },
     { page: "DecreasingSurplus", title: "Decreasing Surplus" },

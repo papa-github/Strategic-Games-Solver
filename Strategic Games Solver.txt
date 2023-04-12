@@ -1,3 +1,8 @@
 1) Take a Matrix and get Show Dominated Strategies,Nash, Pareto, Kaldor Hicks equilibriums
 1) Take a Matrix and Show the rollback  equilibrium and the equilibrium path (may have to allow for 2more than two players)
 	1) maybe show path as well
+
+
+Things to do
+- Add steps to Mixed Nash Equilibrium
+- Add steps to risk dominant equilibrium

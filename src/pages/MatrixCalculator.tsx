@@ -1,9 +1,9 @@
 //import logo from './logo.svg';
 import React, { useState } from 'react';
-import EditableMatrix from '../components/EditableMatrix';
+import EditableMatrix from '../mc-components/EditableMatrix';
 import '../styles/matrix.css'
-import Matrix from '../components/Matrix';
-import MatrixCalculations from '../components/MatrixCalculations';
+import Matrix from '../mc-components/Matrix';
+import MatrixCalculations from '../mc-components/MatrixCalculations';
 import '../styles/MatrixCalculator.css'
 
 
