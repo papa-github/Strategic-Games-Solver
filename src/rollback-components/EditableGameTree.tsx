@@ -9,11 +9,13 @@ import Tree from './Tree';
 
 const initialTree: Node = {
   id: 1,
+  parent: null,
   owner: 0,
   name: ``,
   children: [
     {
       id: 2,
+      parent: 1,
       owner: -1,
       name: `Choice 1`,
       children: [],
@@ -22,6 +24,7 @@ const initialTree: Node = {
     },
     {
       id: 3,
+      parent: 1,
       owner: -1,
       name: `Choice 2`,
       children: [],
@@ -36,6 +39,7 @@ const initialTree: Node = {
 function deepCopyTree(node: Node): Node {
   const newNode: Node = {
     id: node.id,
+    parent: node.parent,
     owner: node.owner,
     name: node.name,
     children: [],
@@ -65,7 +69,7 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
     if (node.children.length === 0) {
       // This is a leaf node, update its owner and children
         node.owner = owner;
-        node.children = createNewChildren(playerNames);
+        node.children = createNewChildren(playerNames, node.id);
         node.isLeaf=false;
     } else {
         // Traverse the children and update their owners
@@ -75,10 +79,11 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
     }
   }
 
-  const createNewChildren = (playerNames: string[]): Node[] => {
+  const createNewChildren = (playerNames: string[], parentId: number): Node[] => {
     const newChildren: Node[] = [
       {
         id: numNodesRef.current + 1,
+        parent: parentId,
         owner: -1,
         name: `Choice 1`,
         children: [],
@@ -88,6 +93,7 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
       {
         id: numNodesRef.current + 2,
         owner: -1,
+        parent: parentId,
         name: `Choice 2`,
         children: [],
         payoffs: [...Array(playerNames.length)].map(() => 0),

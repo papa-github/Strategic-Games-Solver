@@ -4,8 +4,37 @@ import { Node }  from "./NodeInterface";
 export default function Rollback(props: { tree: Tree}) {
     let tree = props.tree
 
-    function rollbackEquilibrium(){
+    function getEquilibriums(selectedNodes: number[]){
+        let nodes = selectedNodes.map((id) => tree.getNode(id)).map((node) => {
+            return {
+                name: node.name,
+                owner: fixOwner(node.owner)
+            }
+        })
 
+
+        function fixOwner(owner_id: number){
+            // 
+            if (owner_id === -1){ return (tree.numPlayers - 1)}
+            return owner_id - 1
+        }
+
+        const result = nodes.reduce((acc: any[], obj) => {
+            const index = acc.findIndex(arr => arr[0].owner === obj.owner);
+            if (index !== -1) {
+              acc[index].push(obj);
+            } else {
+              acc.push([obj]);
+            }
+            return acc;
+        }, []);
+
+        return result.sort((a,b) => a[0].owner - b[0].owner) // Sort by owner, ascending
+        //return (result.map((arr) => arr.map((node: Node) => node.name)))
+    }
+
+    function rollbackEquilibrium( ){
+        
         interface PayoffObject {
             current_id: number;
             path_ids: number[];
@@ -67,7 +96,8 @@ export default function Rollback(props: { tree: Tree}) {
         // Renderer 
         function render(): JSX.Element{
             const payoffs = getPayoffs([],tree.root,[]);
-            console.log(selectedNodes)
+            const rollbacks : Node[][] = getEquilibriums(selectedNodes)
+            console.log(rollbacks)
             return(
                 <div>
                     {payoffs.map((childStrat, index) => {
@@ -86,8 +116,21 @@ export default function Rollback(props: { tree: Tree}) {
                                         )
                                     })}
                                 </div>
-                                <div>
-                                    {}
+                                <div className="equilibrium-path">
+                                    Equilibrium Path: {childStrat.path_ids.map((id, index) => (tree.getNode(id).name)).join(",")}
+                                </div>
+                                <div className="rollback-eq">
+                                    Rollback Equilibrium:(
+                                    {
+                                        rollbacks.map((rollback, index) => {
+                                            return(
+                                                <span>
+                                                    ({rollback.map((node) => node.name).join(",")})
+                                                </span>
+                                            )
+                                        })
+                                    }
+                                    )
                                 </div>
                             </div>
                         )
@@ -98,6 +141,26 @@ export default function Rollback(props: { tree: Tree}) {
         return render()
     }
     function equilibriumPath(){}
+
+    function cartesianProduct(arrays: string[][]): string[][] {
+        // Base case
+        if (arrays.length === 0) {
+          return [[]];
+        }
+      
+        // Recursive case
+        const [head, ...tail] = arrays;
+        const tailCartesian = cartesianProduct(tail);
+        const result = [];
+      
+        for (const item of head) {
+          for (const tailItem of tailCartesian) {
+            result.push([item, ...tailItem]);
+          }
+        }
+      
+        return result;
+    }
     return (
         <div>
             <div className="rollback">

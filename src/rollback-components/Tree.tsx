@@ -9,8 +9,6 @@ class Tree {
         this._players = players;
         if (!(this.validateTree())){
             throw new Error("Invalid Tree");
-        }else{
-            console.log("Tree is valid");
         }
     }
 
@@ -33,6 +31,28 @@ class Tree {
     get numPlayers(): number {
         return this._players.length;
     }
+
+    getNode(id: number): Node {
+        const getNode = (node: Node): Node | undefined => {
+            if (node.id === id) {
+                return node;
+            }else{
+                for (let child of node.children) {
+                    let result = getNode(child);
+                    if (result !== undefined) {
+                        return result;
+                    }
+                }
+            }
+        }
+        const result = getNode(this._root);
+        if (result === undefined) {
+            throw new Error("Node not found");
+        }else{
+            return result;
+        }
+    }
+
 
     validateTree(): boolean {
         // The owner of a node must be a player
