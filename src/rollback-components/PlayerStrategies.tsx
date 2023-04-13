@@ -56,9 +56,11 @@ export default function PlayerStrategies(props: { tree: Tree}) {
 
     return (
         <div>
+            <h3>Player Strategies</h3>
             {tree.players.map((player, index) => {
                 return (
                     <div key={index}>
+                        
                         {player} Strategies: {cartesianProduct(getStrategies(player)).map((childStrat, index) => {return("{" + childStrat.join(", ") + "}")}).join(", ")}
                     </div>
                 )}

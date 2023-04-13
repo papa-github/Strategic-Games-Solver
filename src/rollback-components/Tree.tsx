@@ -112,17 +112,23 @@ class Tree {
         return validateOwner(this._root) && validateLeaves(this._root) && validatePlayers();
     }
 
-    #displayNode(node: Node): JSX.Element {
+    #displayNode(node: Node, highlightedNodes: number[]): JSX.Element {
         return (
             <li key={node.id}>
             <div className="node-name">
                 {node.name}
             </div>
+            {highlightedNodes.includes(node.id) ? (
+                <div className="node-highlighted">
+                    {this.players[node.owner]}
+                </div>
+            ) : (
             <div className="node">
                 {this.players[node.owner]}
             </div>
+            )}
             {node.children.length > 0 ? (
-                <ul>{node.children.map((child) => this.#displayNode(child))}</ul>
+                <ul>{node.children.map((child) => this.#displayNode(child, highlightedNodes))}</ul>
             ) : (
                 // If there are no children, Display an input box for each player
                 [...Array(node.payoffs.length)].map((_, index) => {
@@ -138,10 +144,10 @@ class Tree {
         );
     }
 
-    displayTree(): JSX.Element {
+    displayTree(highlightedNodes: number[] = []): JSX.Element {
         return (
             <div className="tree">
-            <ul>{this.#displayNode(this._root)}</ul>
+            <ul>{this.#displayNode(this._root, highlightedNodes)}</ul>
             </div>
         );
     }
