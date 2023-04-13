@@ -76,7 +76,6 @@ class Tree {
                 
                 for (let payoff of node.payoffs) {
                     // Check that the payoffs are not undefined
-                    console.log(payoff)
                     if (payoff === undefined) {
                         
                         console.log("Undefined Payoff");
