@@ -2,7 +2,12 @@
 1) Take a Matrix and Show the rollback  equilibrium and the equilibrium path (may have to allow for 2more than two players)
 	1) maybe show path as well
 
+Rollback Equlibrium Solver
+-	Assume order will always be Player 1, then Player 2 and so on
 
-Things to do
-- Add steps to Mixed Nash Equilibrium
-- Add steps to risk dominant equilibrium
+- Add a player
+- Show available strategies for each player
+- Show rollback equilibrium
+- Show the equilibrium path
+-	Maybe grey out the invalid nodes
+-	Maybe on line click, show why the node is invalid

@@ -1,155 +1,207 @@
 import React, { useRef, useState } from 'react';
 import '../styles/EditableGameTree.css';
+import { Node } from './NodeInterface';
+import Tree from './Tree';
 
-interface Node {
-  id: number;
-  owner: string;
-  name: string;
-  children: Node[];
-}
+//TODO - Add leaf support
+
+
 
 const initialTree: Node = {
   id: 1,
-  owner: 'Player 1',
-  name: `Root`,
+  owner: 0,
+  name: ``,
   children: [
     {
-      // Set id to the parent id + 1
       id: 2,
-      owner: '',
-      name: `Up`,
-      children: []
+      owner: -1,
+      name: `Choice 1`,
+      children: [],
+      payoffs: [0],
+      isLeaf:true
     },
     {
       id: 3,
-      owner: '',
-      name: `Down`,
-      children: [] //Note: A leaf node cannot have an owner
+      owner: -1,
+      name: `Choice 2`,
+      children: [],
+      payoffs: [0],
+      isLeaf:true
     }
-  ]
+  ],
+  payoffs: [],
+  isLeaf:false
 };
 
 function deepCopyTree(node: Node): Node {
-    const newNode: Node = {
-      id: node.id,
-      owner: node.owner,
-      name: node.name,
-      children: []
-    };
-  
-    // Recursively copy the children nodes
-    newNode.children = node.children.map(child => deepCopyTree(child));
-  
-    return newNode;
-  }
-  
+  const newNode: Node = {
+    id: node.id,
+    owner: node.owner,
+    name: node.name,
+    children: [],
+    payoffs: [...node.payoffs],
+    isLeaf:node.isLeaf
+  };
 
-const GameTree = ({ tree}: { tree: Node}) => {
-    const [payoffs, setPayoffs] = useState<Array<number>>([]);
-  
-    const handleInputChange = (index: number, value: number) => {
-      const newPayoffs = [...payoffs];
-      newPayoffs[index] = value;
-      setPayoffs(newPayoffs);
-    };
-  
-    const renderTree = (node: Node) => {
-        if (node.children.length === 0) { // leaf node
-            return (
-                <div className="node" key={node.id}>
-                  <div className="external-node">{node.name}</div>
-                      <input
-                        type="number"
-                        value={payoffs[node.id] || node.id}
-                        onChange={(event) => handleInputChange(node.id, parseInt(event.target.value))}
-                      />
-                </div>
-              );              
-        } else {
-            return (
-                <div className="node" key={node.id}>
-                  <div className="internal-node">{node.name + " | " + node.owner}</div>
-                    {node.children.map((child) => (
-                        renderTree(child)
-                    ))}
-                </div>
-              );
-              
-        }
-      };
-  
-    return (
-      <div className='tree'>
-        {renderTree(tree)}
-      </div>
-    );
-};
-  
+  newNode.children = node.children.map(child => deepCopyTree(child));
 
-const AddPlayerButton = ({ onClick }: { onClick: () => void }) => (
-  <button onClick={onClick}>Add Player</button>
-);
+  return newNode;
+}
 
-const EditableGameTree = () => {
+const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
   const [tree, setTree] = useState<Node>(initialTree);
-  const [numPlayers, setNumPlayers] = useState<number>(1);
+  const [players, setPlayers] = useState<string[]>(["Player 1"]);
   const [numNodes, setNumNodes] = useState<number>(3);
+  const [newPlayerName, setNewPlayerName] = useState<string>('');
+
   const numNodesRef = useRef(numNodes);
 
+  const handleInputChange = (playerIndex: number, node: Node, value: number) => {
+    if (node.children.length > 0) return;
+    node.payoffs[playerIndex] = value;
+  };
 
-
-  function updateLeaf(node: Node, owner: string): void {
+  function updateLeaf(node: Node, owner: number, playerNames: string[]): void {
     if (node.children.length === 0) {
       // This is a leaf node, update its owner and children
         node.owner = owner;
-        node.children = createNewChildren();
+        node.children = createNewChildren(playerNames);
+        node.isLeaf=false;
     } else {
         // Traverse the children and update their owners
         node.children.forEach(child => {
-            updateLeaf(child, owner);
+            updateLeaf(child, owner, playerNames);
       });
     }
   }
 
-  const createNewChildren = () => {
-    const newChildren = [
-        {
+  const createNewChildren = (playerNames: string[]): Node[] => {
+    const newChildren: Node[] = [
+      {
         id: numNodesRef.current + 1,
-        owner: '',
-        name: `Up`,
-        children: []
-        },
-        {
+        owner: -1,
+        name: `Choice 1`,
+        children: [],
+        payoffs: [...Array(playerNames.length)].map(() => 0),
+        isLeaf:true
+      },
+      {
         id: numNodesRef.current + 2,
-        owner: '',
-        name: `Down`,
-        children: [] //Note: A leaf node cannot have an owner
-        }
+        owner: -1,
+        name: `Choice 2`,
+        children: [],
+        payoffs: [...Array(playerNames.length)].map(() => 0),
+        isLeaf:true
+      }
     ]
-    numNodesRef.current += 2; // will be used again in the next call to createNewChildren
-    return newChildren 
+    numNodesRef.current += 2;
+    return newChildren
   }
 
   const addPlayer = () => {
-    const playerName =  `Player ${numPlayers + 1}`
-    setNumPlayers(numPlayers + 1)
-
+    let name = newPlayerName;
+    let names = [...players]
+    
+    if (name === '') {
+      name = `Player ${names.length + 1}`
+    }
+    
+    // Throw alert if player name is already in use
+    if (names.includes(name)) {
+      alert(`Player name already in use`);
+      return;
+    }
+    
+    names.push(name);
     setNumNodes(numNodes + 2)
-    // To add a new player, we change the owner of all leaf nodes to playerName and add set their children to newChildren
-    // create copy of tree
     const newTree = deepCopyTree(tree)
-    // change owner and children
-    updateLeaf(newTree, playerName)
+    updateLeaf(newTree, names.length -1, names); // pass new node owner and name to updateLeaf function
+    setPlayers([...players,name]);
     setTree(newTree)
   };
-  
 
+  const RenderNode = (node: Node) => {
+    const handleOwnerChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+      // Create a copy of the players array
+      let newPlayers = [...players];
+      // Update the name at the given index
+      newPlayers[index] = event.target.value;
+      // Update the players array
+      setPlayers(newPlayers);
+    }
+  
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>, oldNode: Node) => {
+      let newTree = deepCopyTree(tree);
+      const updateNodeName = (node: Node) => {
+        if (node.id === oldNode.id) {
+          node.name = event.target.value;
+        } else {
+          node.children.forEach(child => {
+            updateNodeName(child);
+          });
+        }
+      };
+      updateNodeName(newTree);
+      setTree(newTree);
+    };
+    
+  
+    return (
+      <li key={node.id}>
+        <div className="node-name">
+          { node.id !== 1 ? <input type="text" value ={node.name} onChange={(event) => handleNameChange(event, node)} /> : ""}
+        </div>
+        <div className="node">
+          { !node.isLeaf ? <input type="text" value ={players[node.owner]} onChange={(event) => handleOwnerChange(event, node.owner)} /> : ""}
+        </div>
+        {node.children.length > 0 ? (
+          <ul>{node.children.map((child) => RenderNode(child))}</ul>
+        ) : (
+          // If there are no children, Display an input box for each player
+          [...Array(node.payoffs.length)].map((_, index) => {
+            return (
+              <div key={index}>
+                {players[index]} Payoff{" "}
+                <input
+                  type="number"
+                  placeholder={(node.payoffs[index]).toString()}
+                  onChange={(e) =>
+                    handleInputChange(index, node, parseInt(e.target.value))
+                  }
+                />
+              </div>
+            );
+          })
+        )}
+      </li>
+    );
+  };
+  
+  const renderTree = (tree: Node) => {
+    return(
+      <div className='tree'>
+        <ul>{RenderNode(tree)}</ul>
+      </div>
+    )
+  }
+  
+  function handleCalculate(){
+    // Validate Tree
+    const finalTree = new Tree(tree, players)
+    props.handleCalculate(finalTree)
+  }
+  
   return (
-    <div>
-      <GameTree tree={tree} />
-      <AddPlayerButton onClick={addPlayer} />
+    <div className='editable-tree'>
+      {renderTree(tree)}
+      <div>
+        <input type="text" placeholder='Player Name' onChange={(e) => setNewPlayerName(e.target.value)} />
+        <button onClick={addPlayer}>Add Player</button>
+      </div>
+      <button onClick={handleCalculate}>Calculate</button>
     </div>
   );
-};
-
-export default EditableGameTree;
+  };
+  
+  export default EditableGameTree;
+  
