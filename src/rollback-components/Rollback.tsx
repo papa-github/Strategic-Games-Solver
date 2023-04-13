@@ -60,7 +60,14 @@ export default function Rollback(props: { tree: Tree}) {
                                     {tree.displayTree(childStrat.ids)}
                                 </div>
                                 <div className="payoff">
-                                    {"{" + childStrat.payoff.join(", ") + "}"}
+                                    {childStrat.payoff.map((payoff, index) => {
+                                        return(
+                                            <div>
+                                                {tree.players[index]} gets a payoff of {payoff}
+                                            </div>
+                                            
+                                        )
+                                    })}
                                 </div>
                             </div>
                         )

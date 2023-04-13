@@ -115,18 +115,18 @@ class Tree {
     #displayNode(node: Node, highlightedNodes: number[]): JSX.Element {
         return (
             <li key={node.id}>
+            {(highlightedNodes.includes(node.id) && node.id !== 1) ? (
+                <div className="node-name-highlighted">
+                    {node.name}
+                </div>
+            ) : (
             <div className="node-name">
                 {node.name}
             </div>
-            {highlightedNodes.includes(node.id) ? (
-                <div className="node-highlighted">
-                    {this.players[node.owner]}
-                </div>
-            ) : (
+            )}
             <div className="node">
                 {this.players[node.owner]}
             </div>
-            )}
             {node.children.length > 0 ? (
                 <ul>{node.children.map((child) => this.#displayNode(child, highlightedNodes))}</ul>
             ) : (

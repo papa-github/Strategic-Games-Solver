@@ -119,12 +119,11 @@ right connector from last child*/
 	padding: 1%;
 }
 
-.node-highlighted{
-	border: #90EE90 1px solid;
+.node-name-highlighted{
+	background-color: #90EE90;
 	border-radius: 5px;
 	width: fit-content;
 	margin: auto;
-	padding: 1%;
 }
 
 .editable-tree input{
