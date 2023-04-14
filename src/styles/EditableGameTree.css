@@ -133,3 +133,30 @@ right connector from last child*/
 .light{
 	border: lightgray 1px solid;
 }
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+  
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: fit-content;
+	background-color: gray;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	transition: opacity 1s ease-in-out;  
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: -5px;
+	left: 105%;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}

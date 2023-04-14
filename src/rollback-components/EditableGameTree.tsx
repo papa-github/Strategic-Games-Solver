@@ -159,6 +159,8 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
         </div>
         <div className="node">
           { !node.isLeaf ? <input type="text" value ={players[node.owner]} onChange={(event) => handleOwnerChange(event, node.owner)} /> : ""}
+          { !node.isLeaf ? <button className='tooltip'>+<span className="tooltiptext">Add child</span></button> : ""}
+          { (!node.isLeaf && (node.parent !== null)) ? <button className='tooltip'>-<span className="tooltiptext">Remove child</span></button> : ""} {/* Show minus button if node isn't a leaf and the node isn't the root node with 2 children already */}
         </div>
         {node.children.length > 0 ? (
           <ul>{node.children.map((child) => RenderNode(child))}</ul>
