@@ -113,7 +113,7 @@ export default function Rollback(props: { tree: Tree}) {
                                 <div className="payoff">
                                     {childStrat.payoff.map((payoff, index) => {
                                         return(
-                                            <div>
+                                            <div key={index}>
                                                 {tree.players[index]} gets a payoff of {payoff}
                                             </div>
                                         )
@@ -128,7 +128,7 @@ export default function Rollback(props: { tree: Tree}) {
                                     {
                                         getEquilibriums(Array.from(childStrat.rollbackIds).sort((a, b) => (b-a))).map((rollback: Node[], index) => {
                                             return(
-                                                <span>
+                                                <span key={index}>
                                                     ({rollback.map((node) => node.name).join(",")})
                                                 </span>
                                             )

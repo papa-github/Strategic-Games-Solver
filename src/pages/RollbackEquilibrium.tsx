@@ -14,6 +14,7 @@ export default function RollbackEquilibrium() {
     }
     return (
         <div className="rollback-equilibrium">
+            This solver can solve simple sequential games. Be careful using this for games with more than 2 choices per player (you can, but calculations are untested).
             <EditableGameTree handleCalculate={setTree}/>
             
             {treeData && <PlayerStrategies tree={treeData}/>}

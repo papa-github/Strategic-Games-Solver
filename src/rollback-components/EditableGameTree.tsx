@@ -11,29 +11,83 @@ const initialTree: Node = {
   id: 1,
   parent: null,
   owner: 0,
-  name: ``,
+  name: "",
   children: [
     {
       id: 2,
       parent: 1,
-      owner: -1,
-      name: `Choice 1`,
-      children: [],
-      payoffs: [0],
-      isLeaf:true
+      owner: 1,
+      name: "Starbucks",
+      children: [
+        {
+          id: 4,
+          parent: 2,
+          owner: -1,
+          name: "Starbucks",
+          children: [],
+          payoffs: [
+            1,
+            2
+          ],
+          isLeaf: true
+        },
+        {
+          id: 5,
+          parent: 2,
+          owner: -1,
+          name: "Costa",
+          children: [],
+          payoffs: [
+            0,
+            0
+          ],
+          isLeaf: true
+        }
+      ],
+      payoffs: [
+        0
+      ],
+      isLeaf: false
     },
     {
       id: 3,
       parent: 1,
-      owner: -1,
-      name: `Choice 2`,
-      children: [],
-      payoffs: [0],
-      isLeaf:true
+      owner: 1,
+      name: "Costa",
+      children: [
+        {
+          id: 6,
+          parent: 3,
+          owner: -1,
+          name: "Starbucks",
+          children: [],
+          payoffs: [
+            0,
+            0
+          ],
+          isLeaf: true
+        },
+        {
+          id: 7,
+          parent: 3,
+          owner: -1,
+          name: "Costa",
+          children: [],
+          payoffs: [
+            2,
+            1
+          ],
+          isLeaf: true
+        }
+      ],
+      payoffs: [
+        0
+      ],
+      isLeaf: false
     }
   ],
   payoffs: [],
-  isLeaf:false
+  isLeaf: false
 };
 
 function deepCopyTree(node: Node): Node {
@@ -54,8 +108,8 @@ function deepCopyTree(node: Node): Node {
 
 const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
   const [tree, setTree] = useState<Node>(initialTree);
-  const [players, setPlayers] = useState<string[]>(["Player 1"]);
-  const [numNodes, setNumNodes] = useState<number>(3);
+  const [players, setPlayers] = useState<string[]>(["Sally", "Harry"]);
+  const [numNodes, setNumNodes] = useState<number>(7);
   const [newPlayerName, setNewPlayerName] = useState<string>('');
 
   const numNodesRef = useRef(numNodes);
@@ -69,7 +123,7 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
     if (node.children.length === 0) {
       // This is a leaf node, update its owner and children
         node.owner = owner;
-        node.children = createNewChildren(playerNames, node.id);
+        node.children = createNewChildren(2, playerNames, node.id);
         node.isLeaf=false;
     } else {
         // Traverse the children and update their owners
@@ -79,28 +133,20 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
     }
   }
 
-  const createNewChildren = (playerNames: string[], parentId: number): Node[] => {
-    const newChildren: Node[] = [
-      {
+  const createNewChildren = (number: number, playerNames: string[], parentId: number): Node[] => {
+    const newChildren: Node[] = [];
+    for (let i = 0; i < number; i++) {
+      newChildren.push({
         id: numNodesRef.current + 1,
         parent: parentId,
         owner: -1,
-        name: `Choice 1`,
+        name: `Choice ${i + 1}`,
         children: [],
         payoffs: [...Array(playerNames.length)].map(() => 0),
         isLeaf:true
-      },
-      {
-        id: numNodesRef.current + 2,
-        owner: -1,
-        parent: parentId,
-        name: `Choice 2`,
-        children: [],
-        payoffs: [...Array(playerNames.length)].map(() => 0),
-        isLeaf:true
-      }
-    ]
-    numNodesRef.current += 2;
+      });
+      numNodesRef.current++;
+    }
     return newChildren
   }
 
@@ -150,6 +196,45 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
       updateNodeName(newTree);
       setTree(newTree);
     };
+
+    const handleAddChild = () => {
+      let newTree = deepCopyTree(tree);
+      const addChild = (node2: Node) => {
+        if (node2.id === node.id) {
+          const newChild = createNewChildren(1, players, node2.id)[0];
+          node2.children.push(newChild);
+
+        } else {
+          node2.children.forEach(child => {
+            addChild(child);
+          });
+        }
+      };
+      addChild(newTree);
+      setTree(newTree);
+    };
+    
+    const handleRemoveChild = () => {
+      let newTree = deepCopyTree(tree);
+      const removeChild = (node2: Node) => {
+        if (node2.id === node.id) {
+          // Remove the last child
+          node2.children.pop();
+          // If there are no more children, make this node a leaf
+          if (node2.children.length === 0) {
+            node2.isLeaf = true;
+          }
+          
+        } else {
+          node2.children.forEach(child => {
+            removeChild(child);
+          });
+        }
+      };
+      removeChild(newTree);
+      setTree(newTree);
+    };
+
     
   
     return (
@@ -159,8 +244,8 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
         </div>
         <div className="node">
           { !node.isLeaf ? <input type="text" value ={players[node.owner]} onChange={(event) => handleOwnerChange(event, node.owner)} /> : ""}
-          { !node.isLeaf ? <button className='tooltip'>+<span className="tooltiptext">Add child</span></button> : ""}
-          { (!node.isLeaf && (node.parent !== null)) ? <button className='tooltip'>-<span className="tooltiptext">Remove child</span></button> : ""} {/* Show minus button if node isn't a leaf and the node isn't the root node with 2 children already */}
+          { !node.isLeaf ? <button className='tooltip' onClick={handleAddChild}>+<span className="tooltiptext">Add choice</span></button> : ""}
+          { (!node.isLeaf && (node.parent !== null)) ? <button className='tooltip' onClick={handleRemoveChild}>-<span className="tooltiptext">Remove choice</span></button> : ""} {/* Show minus button if node isn't a leaf and the node isn't the root node with 2 children already */}
         </div>
         {node.children.length > 0 ? (
           <ul>{node.children.map((child) => RenderNode(child))}</ul>
