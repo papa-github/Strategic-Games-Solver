@@ -204,7 +204,7 @@ const EditableGameTree = (props: { handleCalculate: (tree: Tree) => any }) => {
         <input type="text" placeholder='Player Name' onChange={(e) => setNewPlayerName(e.target.value)} />
         <button onClick={addPlayer}>Add Player</button>
       </div>
-      <button onClick={handleCalculate}>Calculate</button>
+      <button className='calculate-button' onClick={handleCalculate}>Calculate</button>
     </div>
   );
   };

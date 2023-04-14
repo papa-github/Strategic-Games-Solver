@@ -119,6 +119,7 @@ export default function Rollback(props: { tree: Tree}) {
                                         )
                                     })}
                                 </div>
+                                
                                 <div className="equilibrium-path">
                                     <b>Equilibrium Path:</b> {childStrat.path_ids.map((id, index) => (tree.getNode(id).name)).join(",")}
                                 </div>
@@ -135,6 +136,7 @@ export default function Rollback(props: { tree: Tree}) {
                                     }
                                     )
                                 </div>
+                                <hr className="light"/>
                             </div>
                         )
                     })}
@@ -147,6 +149,7 @@ export default function Rollback(props: { tree: Tree}) {
     return (
         <div>
             <div className="rollback">
+            <hr />
                 <h3>Rollback Equilibrium</h3>
                 {rollbackEquilibrium()}
             </div>

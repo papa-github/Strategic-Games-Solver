@@ -15,8 +15,9 @@ export default function RollbackEquilibrium() {
     return (
         <div className="rollback-equilibrium">
             <EditableGameTree handleCalculate={setTree}/>
-            {treeData ? <div>{treeData.displayTree()}</div> : <div>No Tree Data</div>}
+            
             {treeData && <PlayerStrategies tree={treeData}/>}
+            
             {treeData && <Rollback tree={treeData}/>}
         </div>
     )

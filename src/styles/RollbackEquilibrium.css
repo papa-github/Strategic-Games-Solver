@@ -1,4 +1,11 @@
 .rollback-equilibrium{
     display: flex;
+    width: min-content;
     flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+.rollback-equilibrium h3{
+    text-align: center;
 }
