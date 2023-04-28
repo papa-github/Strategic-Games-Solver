@@ -1,7 +1,7 @@
 import Tree from "./Tree";
 import { Node }  from "./NodeInterface";
 
-export default function Rollback(props: { tree: Tree}) {
+export default function Rollback(props: {tree: Tree, orientation: "vertical" | "horizontal"}) {
     let tree = props.tree
 
     function getEquilibriums(selectedNodes: number[]){
@@ -46,6 +46,9 @@ export default function Rollback(props: { tree: Tree}) {
             let max = -Infinity;
             let result: PayoffObject[] = [];
             let failures: PayoffObject[] = [];
+
+            
+
             // Iterate over each array
             for (let i = 0; i < payoffObjects.length; i++) {
                 //Check if the value exists
@@ -54,6 +57,7 @@ export default function Rollback(props: { tree: Tree}) {
                 }
                 // Check if value greater than max
                 if (payoffObjects[i].payoff[index] > max) {
+                    // If so, set max to value
                     max = payoffObjects[i].payoff[index];
                 }
             }
@@ -69,12 +73,24 @@ export default function Rollback(props: { tree: Tree}) {
                     failures.push(payoffObjects[i]);
                 }
             }
+
             //Iterate over failures and add their rollbackIds to every result object
-            failures.map((failure) => (
-                result.map((success) =>
-                    success.rollbackIds = new Set([...success.rollbackIds, ...failure.rollbackIds])
+            payoffObjects.map((object, index) => (
+                payoffObjects.map((object2, index2) =>
+                {
+                    // Skip if index is the same
+                    if (index === index2){}
+                    else {
+                        let addSet = (new Set([...object2.rollbackIds, ...object.rollbackIds]))
+                        addSet.delete(object.current_id)
+                        object2.rollbackIds = addSet
+                    }
+                }
                 )
             ))
+
+            
+            
 
 
 
@@ -86,13 +102,14 @@ export default function Rollback(props: { tree: Tree}) {
                 return [{current_id: node.id , path_ids: [...path,node.id], payoff: node.payoffs, rollbackIds: new Set<number>()}]
             }
             else{
+                // check if current node has an id of 3
                 const children = node.children;
                 const childPayoffs: PayoffObject[] = children.map((child) => {
                     const result: PayoffObject[] = getPayoffs([...path,node.id], child, validNodes);
                     result.map((payoffObject) => ( payoffObject.current_id = child.id))
                     return (result)
                 }).flat(); //Array of PayoffObjects
-
+                let check = getMaxPayoffObjects(childPayoffs, node.owner, node.id);
                 return getMaxPayoffObjects(childPayoffs, node.owner, node.id);
             }
         }
@@ -125,15 +142,24 @@ export default function Rollback(props: { tree: Tree}) {
                                 </div>
                                 <div className="rollback-eq">
                                     <b>Rollback Equilibrium:</b>(
-                                    {
-                                        getEquilibriums(Array.from(childStrat.rollbackIds).sort((a, b) => (b-a))).map((rollback: Node[], index) => {
-                                            return(
-                                                <span key={index}>
-                                                    ({rollback.map((node) => node.name).join(",")})
-                                                </span>
-                                            )
-                                        })
-                                    }
+                                        
+                                        { props.orientation === "vertical" ?
+                                            getEquilibriums(Array.from(childStrat.rollbackIds).sort((a, b) => (a-b))).map((rollback: Node[], index) => {
+                                                return(
+                                                    <span key={index}>
+                                                        ({rollback.map((node) => node.name).join(",")})
+                                                    </span>
+                                                )
+                                            })
+                                            : 
+                                            getEquilibriums(Array.from(childStrat.rollbackIds).sort((a, b) => (b-a))).map((rollback: Node[], index) => {
+                                                return(
+                                                    <span key={index}>
+                                                        ({rollback.map((node) => node.name).join(",")})
+                                                    </span>
+                                                )
+                                            })
+                                        }
                                     )
                                 </div>
                                 <hr className="light"/>

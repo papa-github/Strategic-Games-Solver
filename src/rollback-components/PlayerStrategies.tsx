@@ -2,7 +2,7 @@ import Tree from "./Tree";
 import { Node }  from "./NodeInterface";
 
 
-export default function PlayerStrategies(props: { tree: Tree}) {
+export default function PlayerStrategies(props: { tree: Tree, orientation : "vertical" | "horizontal"}) {
     let tree = props.tree 
 
     function cartesianProduct(arrays: string[][]): string[][] {
@@ -61,7 +61,7 @@ export default function PlayerStrategies(props: { tree: Tree}) {
                 return (
                     <div key={index}>
                         
-                        <b>{player} Strategies:</b> {cartesianProduct(getStrategies(player)).map((childStrat, index) => {return("{" + childStrat.join(", ") + "}")}).join(", ")}
+                        <b>{player} Strategies:</b> {props.orientation === "vertical" ? cartesianProduct(getStrategies(player)).map((childStrat, index) => {return("{" + childStrat.join(", ") + "}")}).join(", ") : cartesianProduct(getStrategies(player)).reverse().map((childStrat, index) => {return("{" + childStrat.join(", ") + "}")}).join(", ")}
                     </div>
                 )}
             )}

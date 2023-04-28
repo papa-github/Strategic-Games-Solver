@@ -1,0 +1,15 @@
+.externality-calculator{
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+.externality-calculator .calculate-button {
+    float: right;
+
+}
+.externality-calculator h2 {
+    text-align: center;
+}
