@@ -49,12 +49,12 @@ function InputField(props: {onCalculate: Function}){
 
     function changePotSize(event: React.ChangeEvent<HTMLInputElement>){
         //Make sure its a number
-        if (!(/^\d+$/.test((event.target.value)))){
+        if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
             alert("Please enter a number")
             event.target.value = event.target.value.replace(/\D/g,'');
             return
         }
-        setPot({...pot, size: parseInt(event.target.value)})
+        setPot({...pot, size: parseFloat(event.target.value)})
     }
 
     function setTurnOrder (event: React.ChangeEvent<HTMLSelectElement>){
@@ -100,11 +100,7 @@ function InputField(props: {onCalculate: Function}){
             alert("Decrease amount must be between 0 and 1")
             return
         }
-        // Pot size must be an integer
-        if(!Number.isInteger(pot.size)){
-            alert("Pot size must be an integer")
-            return
-        }
+    
         // Batna must be less than pot size
         if(player1.batna >= pot.size || player2.batna >= pot.size){
             alert("BATNA must be less than pot size - otherwise the player will always take their BATNA")
@@ -135,7 +131,7 @@ function InputField(props: {onCalculate: Function}){
             event.target.value = event.target.value.replace(/\D/g,'');
             return
         }
-        setPot({...pot, turnLimit: parseInt(event.target.value)})
+        setPot({...pot, turnLimit: parseInt(event.target.value) + 1})
     }
 
     
@@ -158,7 +154,7 @@ function InputField(props: {onCalculate: Function}){
             <br />
             When does pot disappear? <select onChange={initialiseTurnLimit}><option> (Default) When its size reaches 0</option><option>After a set amount of turns</option></select>
             <br />
-            {pot.turnLimit ? "How many turns?" : null}
+            {pot.turnLimit ? "After how many turns?" : null}
             {pot.turnLimit ?  <input type="text" placeholder="e.g. 10" onChange={setTurnLimit}/> : null}
             <br />
             <button onClick={handleCalculate} className="calculate-button">Calculate</button>
@@ -180,7 +176,7 @@ function BargainingGrid(props : {player1: Player, player2: Player, pot: Pot}){
 
     function Negotiate(player1: Player, player2: Player, pot: Pot, roundNumber: number): NegotiationRound{
         //If the current pot is equal to or less than the sum of the BATNAs, then the players will take their BATNAs and the negotiation is over
-        if (roundNumber === pot.turnLimit){
+        if (roundNumber === pot.turnLimit || pot.size < 0){
             pot.size = 0
         }
         if(pot.size <= player1.batna + player2.batna || pot.size <= 0.01){
@@ -298,7 +294,7 @@ export default function DecreasingSurplus() {
         <div className="decreasing-surplus">
             <h1>Decreasing Surplus Calculator</h1>
             <InputField onCalculate={onCaluclate}/>
-            {showCalculation && <button onClick={handleScroll} className="scroll-button">Scroll to Turn 1</button>}
+            {showCalculation && <button onClick={handleScroll} className="scroll-button">Scroll to Round 1</button>}
             {showCalculation && <BargainingGrid player1={player1} player2={player2} pot={pot}/>}
         </div>
     )
