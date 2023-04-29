@@ -11,6 +11,7 @@ interface Pot{
     size: number,
     decreaseType: "constant" | "percentage",
     decreaseAmount: number
+    turnLimit?: number //The pot will only exist for this many turns
 }
 
 function InputField(props: {onCalculate: Function}){
@@ -110,8 +111,31 @@ function InputField(props: {onCalculate: Function}){
             return
         }
 
+        // If both BATNAs are 0 and the pot decrease type is percentage and the turn limit is undefined, the pot will never decrease to 0
+        if(player1.batna === 0 && player2.batna === 0 && pot.decreaseType === "percentage" && pot.turnLimit === undefined){
+            alert("Note: Both BATNAs are 0 and the pot decrease type is percentage, so the negotation will never end (as the pot will never decrease to 0).\n\nSo, I've ended the negotiation when the pot is less than 0.01.")
+        }
+
         props.onCalculate(player1,player2,pot)
 
+    }
+    
+    function initialiseTurnLimit(event: React.ChangeEvent<HTMLSelectElement>){
+        if(event.target.value.includes("turns")){
+            setPot({...pot, turnLimit:10})
+        }else{
+            setPot({...pot, turnLimit: undefined})
+        }
+    }
+
+    function setTurnLimit(event: React.ChangeEvent<HTMLInputElement>){
+        //Make sure its a number
+        if (!(/^\d+$/.test((event.target.value)))){
+            alert("Please enter a number")
+            event.target.value = event.target.value.replace(/\D/g,'');
+            return
+        }
+        setPot({...pot, turnLimit: parseInt(event.target.value)})
     }
 
     
@@ -132,7 +156,12 @@ function InputField(props: {onCalculate: Function}){
             <br />
             How much does the pot decrease each round? <input type="text" placeholder={pot.decreaseType === "constant" ? "e.g. 1"  : "e.g. 0.9"} onChange={setDecreaseAmount}/>
             <br />
-            <button onClick={handleCalculate}>Calculate</button>
+            When does pot disappear? <select onChange={initialiseTurnLimit}><option> (Default) When its size reaches 0</option><option>After a set amount of turns</option></select>
+            <br />
+            {pot.turnLimit ? "How many turns?" : null}
+            {pot.turnLimit ?  <input type="text" placeholder="e.g. 10" onChange={setTurnLimit}/> : null}
+            <br />
+            <button onClick={handleCalculate} className="calculate-button">Calculate</button>
 
         </div>
     )
@@ -151,7 +180,10 @@ function BargainingGrid(props : {player1: Player, player2: Player, pot: Pot}){
 
     function Negotiate(player1: Player, player2: Player, pot: Pot, roundNumber: number): NegotiationRound{
         //If the current pot is equal to or less than the sum of the BATNAs, then the players will take their BATNAs and the negotiation is over
-        if(pot.size <= player1.batna + player2.batna){
+        if (roundNumber === pot.turnLimit){
+            pot.size = 0
+        }
+        if(pot.size <= player1.batna + player2.batna || pot.size <= 0.01){
             // If there is still some pot left, then the game has ended early
             if (pot.size > 0){
                 gameEndedEarly = true
@@ -215,10 +247,10 @@ function BargainingGrid(props : {player1: Player, player2: Player, pot: Pot}){
                             {rows.sort((a,b) => b.roundNumber - a.roundNumber).map(row =>
                                 <tr key={row.roundNumber}>
                                     <td>{row.roundNumber}</td>
-                                    <td>{row.potSize}</td>
+                                    <td>{row.potSize.toFixed(2)}</td>
                                     <td>{row.playerTurn.name}</td>
-                                    <td>{row.player1Offer}</td>
-                                    <td>{row.player2Offer}</td>
+                                    <td>{row.player1Offer.toFixed(2)}</td>
+                                    <td>{row.player2Offer.toFixed(2)}</td>
                                 </tr>
                             )}
                         </tbody>
@@ -253,10 +285,20 @@ export default function DecreasingSurplus() {
         SetPot(pot)
         setShowCalculation(true)
     }
+
+    function handleScroll() {
+        window.scroll({
+          top: document.body.offsetHeight,
+          left: 0, 
+          behavior: 'smooth',
+        });
+    }
+
     return (
         <div className="decreasing-surplus">
             <h1>Decreasing Surplus Calculator</h1>
             <InputField onCalculate={onCaluclate}/>
+            {showCalculation && <button onClick={handleScroll} className="scroll-button">Scroll to Turn 1</button>}
             {showCalculation && <BargainingGrid player1={player1} player2={player2} pot={pot}/>}
         </div>
     )
