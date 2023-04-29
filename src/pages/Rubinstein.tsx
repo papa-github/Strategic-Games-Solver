@@ -60,16 +60,16 @@ function InputField(props: {onCalculate: Function}){
         setPlayer2({...player2, discountFactor: parseFloat(event.target.value)})
     }
 
-    
+
 
     function changePotSize(event: React.ChangeEvent<HTMLInputElement>){
         //Make sure its a number
-        if (!(/^\d+$/.test((event.target.value)))){
+        if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
             alert("Please enter a number")
             event.target.value = event.target.value.replace(/\D/g,'');
             return
         }
-        setPotSize(parseInt(event.target.value))
+        setPotSize(parseFloat(event.target.value))
     }
 
     function setTurnOrder (event: React.ChangeEvent<HTMLSelectElement>){

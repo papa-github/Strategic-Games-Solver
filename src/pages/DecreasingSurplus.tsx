@@ -27,33 +27,29 @@ function InputField(props: {onCalculate: Function}){
         setPlayer2({...player2, name: event.target.value})
     }
 
-    function changePlayer1Batna(event: React.ChangeEvent<HTMLInputElement>){
+    function checkIfFloat(event: React.ChangeEvent<HTMLInputElement>): boolean{
         //Make sure its a number
         if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
             alert("Please enter a number")
-            event.target.value = ""
-            return
+            event.target.value = event.target.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g, '$1');
+            return false
         }
+        return true
+    }
+
+    function changePlayer1Batna(event: React.ChangeEvent<HTMLInputElement>){
+        //Make sure its a number
+        if (!checkIfFloat(event)){return}
         setPlayer1({...player1, batna: parseFloat(event.target.value)})
     }
 
     function changePlayer2Batna(event: React.ChangeEvent<HTMLInputElement>){
-        //Make sure its a number
-        if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
-            alert("Please enter a number")
-            event.target.value = event.target.value.replace(/\D/g,'');
-            return
-        }
+        if (!checkIfFloat(event)){return}
         setPlayer2({...player2, batna: parseFloat(event.target.value)})
     }
 
     function changePotSize(event: React.ChangeEvent<HTMLInputElement>){
-        //Make sure its a number
-        if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
-            alert("Please enter a number")
-            event.target.value = event.target.value.replace(/\D/g,'');
-            return
-        }
+        if (!checkIfFloat(event)){return}
         setPot({...pot, size: parseFloat(event.target.value)})
     }
 
@@ -78,12 +74,7 @@ function InputField(props: {onCalculate: Function}){
     }
 
     function setDecreaseAmount(event: React.ChangeEvent<HTMLInputElement>){
-        //Make sure its a number
-        if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
-            alert("Please enter a number")
-            event.target.value = event.target.value.replace(/\D/g,'');
-            return
-        }
+        if (!checkIfFloat(event)){return}
 
         setPot({...pot, decreaseAmount: parseFloat(event.target.value)})
     }
