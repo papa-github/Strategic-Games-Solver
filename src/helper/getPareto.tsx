@@ -35,7 +35,7 @@ function getPareto(matrix: number[][][]): number[][]{
       }
     }
   }
-    return result;
+    return result; // Returns an array of indexes of pareto efficent strategies
 }
 
 export default getPareto;

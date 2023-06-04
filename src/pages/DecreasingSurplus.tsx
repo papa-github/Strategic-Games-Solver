@@ -30,6 +30,13 @@ function InputField(props: {onCalculate: Function}){
     function checkIfFloat(event: React.ChangeEvent<HTMLInputElement>): boolean{
         //Make sure its a number
         if (!(/^\d+(\.\d*)?$/.test(event.target.value))){
+            // If the user is entering the percentage decrease, and they've just entered a %, then tell them they don't need to enter the %
+            if(event.target.value.endsWith("%")){
+                alert("You don't need to enter the %")
+                event.target.value = event.target.value.replace("%","")
+                // Call the function again to check if the new value is a number
+                return checkIfFloat(event)
+            }
             alert("Please enter a number")
             event.target.value = event.target.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g, '$1');
             return false
@@ -75,8 +82,16 @@ function InputField(props: {onCalculate: Function}){
 
     function setDecreaseAmount(event: React.ChangeEvent<HTMLInputElement>){
         if (!checkIfFloat(event)){return}
+        // New change - User now gives percentage decrease, bt we need to convert this into a multiplier
+        if(pot.decreaseType === "percentage"){
+            let amount = 1 - (parseFloat(event.target.value) / 100)
+            setPot({...pot, decreaseAmount: amount})
+        }
+        else{
+            setPot({...pot, decreaseAmount: parseFloat(event.target.value)})
+        }
 
-        setPot({...pot, decreaseAmount: parseFloat(event.target.value)})
+        
     }
 
     function handleCalculate(){
@@ -87,8 +102,8 @@ function InputField(props: {onCalculate: Function}){
             return
         }
         // If decrease type is percentage, it must be between 0 and 1
-        if(pot.decreaseType === "percentage" && (pot.decreaseAmount <= 0 || pot.decreaseAmount >= 1)){
-            alert("Decrease amount must be between 0 and 1")
+        if(pot.decreaseType === "percentage" && (pot.decreaseAmount < 0 || pot.decreaseAmount >= 1)){
+            alert("Decrease amount must be between 0 and 100 (can't be 0 though)")
             return
         }
     
@@ -139,9 +154,9 @@ function InputField(props: {onCalculate: Function}){
             <hr />
             Pot Size: <input type="text" placeholder={pot.size.toString()} onChange={changePotSize}/>
             <br />
-            How does the pot decrease each round? <select onChange={setDecreaseType}><option>{"Constant - e.g. 1 each round"}</option><option>{"Percentage - e.g. by ×0.9 each round"}</option></select>
+            How does the pot decrease each round? <select onChange={setDecreaseType}><option>{"Constant - e.g. 1 each round"}</option><option>{"Percentage - e.g. by 10% each round"}</option></select>
             <br />
-            How much does the pot decrease each round? <input type="text" placeholder={pot.decreaseType === "constant" ? "e.g. 1"  : "e.g. 0.9"} onChange={setDecreaseAmount}/>
+            How much does the pot decrease each round? <input type="text" placeholder={pot.decreaseType === "constant" ? "e.g. 1"  : "e.g. 10%"} onChange={setDecreaseAmount}/>
             <br />
             When does pot disappear? <select onChange={initialiseTurnLimit}><option> (Default) When its size reaches 0</option><option>After a set amount of turns</option></select>
             <br />

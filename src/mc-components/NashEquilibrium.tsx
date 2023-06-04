@@ -9,6 +9,7 @@ function NashEquilibrium(props: {param: Matrix}) {
     let [matrix, dominated] = Dominance(props.param)
     let payoffDominant: number[][] | null = null;
     let riskDominant: number[][] | null = null;
+    let isPrisonersDilemma: boolean = false;
 
     function findPureNash(): JSX.Element {
         const nashEquilibria: number[][] = [];
@@ -38,9 +39,29 @@ function NashEquilibrium(props: {param: Matrix}) {
             //paretoEquilibria is specifies the indexes in nashEquilibria that are pareto superior. We can then use those indexes to get the matrix indexes.
             payoffDominant = paretoEquilibra.map(cell => nashEquilibria[cell[0]])
             riskDominant = getRiskDominant(nashEquilibria)
+          }
         }
+
+        //Check if the game is a prisoners dilemma
+        // If all the nash equilibria are not pareto efficent, the game is a prisoner's dilemma
+        // Unfortunately, the indices of nashEquilibria are of the reduced matrix, so we need to convert them to the original matrix
+        // We can do so by matching the row and column headers of the reduced matrix (matrix) to the original matrix (props.param)
+        let originalNashIndexes: number[][] = [];
+        for (let i = 0; i < nashEquilibria.length; i++) {
+          let row = props.param.rowHeaders.indexOf(matrix.rowHeaders[nashEquilibria[i][0]]); // Get the index of the row header in the original matrix
+          let col = props.param.colHeaders.indexOf(matrix.colHeaders[nashEquilibria[i][1]]); // Get the index of the column header in the original matrix
+          originalNashIndexes.push([row, col]);
         }
-        return ( matrix.display(nashEquilibria));
+
+        let paretoCheck = getPareto(props.param.convertToNumberMatrix()) //This should return an array of indexes of pareto efficent strategies
+        if (paretoCheck.length === 0) isPrisonersDilemma = true;
+        // If any of the nash equilibria are in the paretoCheck, then the game is not a prisoner's dilemma
+        const isPareto = (element: number[]) => paretoCheck.some((subElement) => subElement[0] === element[0] && subElement[1] === element[1]);
+        isPrisonersDilemma = !originalNashIndexes.some(isPareto);
+        console.log(isPrisonersDilemma)
+        console.log(paretoCheck)
+        console.log(originalNashIndexes)
+        return (matrix.display(nashEquilibria));
     }
 
     function getPayoffs(inputs: string[]): number[][][] {
@@ -212,7 +233,6 @@ function NashEquilibrium(props: {param: Matrix}) {
 
     function generateStrings(letter: string, num: number): string[] {
         const result: string[] = [];
-        if (num === 1) {console.log(num === 1)};
         
         for (let i = 1; i < num; i++) {
           result.push(`${letter}${i}`);
@@ -297,7 +317,6 @@ function NashEquilibrium(props: {param: Matrix}) {
 
     function renderPayoffDominant(): JSX.Element{
       if (payoffDominant === null) return <p></p>
-      console.log(payoffDominant)
       return (
         <div>
           
@@ -319,14 +338,18 @@ function NashEquilibrium(props: {param: Matrix}) {
       )
     }
 
+    console.log(isPrisonersDilemma)
+    const pureNash = findPureNash()
     return(
         <div>
+          {isPrisonersDilemma && <p>Note: This game is a prisoner's dilemma - the Nash equilibria are not Pareto Efficient</p>}
           <div className="matrix-calculation" id="dominated-strategy">
                 {dominated}
           </div>
           <div className="matrix-calculation" id="nash">
             <h3>Pure Strategy Nash Equilibrium</h3>
-            {findPureNash()}
+            {pureNash}
+            {}
             <hr />
             <h3>Mixed Strategy Nash Equilibrium</h3>
             {findMixedNash()}
